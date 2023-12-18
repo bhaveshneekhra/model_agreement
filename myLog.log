@@ -1,0 +1,15 @@
+No of samples in OOD is less than 5\% of the original
+Round 2 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 1027717462341
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 121494690
+numeric_label
+0    2102
+1    2151
+2    2622
+3    2449
+Name: numeric_label, dtype: int64
+Round 2 ends.
+
+
+No of samples in OOD is less than 5\% of the original
