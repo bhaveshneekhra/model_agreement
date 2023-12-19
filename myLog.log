@@ -1,15 +1,735 @@
-No of samples in OOD is less than 5\% of the original
+For100models, test accuracy avg and stddev: 0.9785735963581184 0.005568361731680584
+Round 1: No of OOD samples for which labelling is done: 4244
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 6689 849 6826
+
 Round 2 starts:
 
-Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 1027717462341
-Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 121494690
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 6689 849 6826
+For0model's accuracy on heldout OOD data: 0.9952885747938751
+For1model's accuracy on heldout OOD data: 0.9964664310954063
+For2model's accuracy on heldout OOD data: 0.9941107184923439
+For3model's accuracy on heldout OOD data: 0.9929328621908127
+For4model's accuracy on heldout OOD data: 0.9952885747938751
+For5model's accuracy on heldout OOD data: 0.9941107184923439
+For6model's accuracy on heldout OOD data: 0.9976442873969376
+For7model's accuracy on heldout OOD data: 0.9941107184923439
+For8model's accuracy on heldout OOD data: 0.9905771495877503
+For9model's accuracy on heldout OOD data: 0.9952885747938751
+For10model's accuracy on heldout OOD data: 0.9941107184923439
+For11model's accuracy on heldout OOD data: 0.9952885747938751
+For12model's accuracy on heldout OOD data: 0.9952885747938751
+For13model's accuracy on heldout OOD data: 0.9941107184923439
+For14model's accuracy on heldout OOD data: 0.9952885747938751
+For15model's accuracy on heldout OOD data: 0.9929328621908127
+For16model's accuracy on heldout OOD data: 0.9952885747938751
+For17model's accuracy on heldout OOD data: 0.9952885747938751
+For18model's accuracy on heldout OOD data: 0.9976442873969376
+For19model's accuracy on heldout OOD data: 0.9917550058892816
+For20model's accuracy on heldout OOD data: 0.9941107184923439
+For21model's accuracy on heldout OOD data: 0.9941107184923439
+For22model's accuracy on heldout OOD data: 0.9988221436984688
+For23model's accuracy on heldout OOD data: 0.9964664310954063
+For24model's accuracy on heldout OOD data: 0.9917550058892816
+For25model's accuracy on heldout OOD data: 0.9917550058892816
+For26model's accuracy on heldout OOD data: 0.9952885747938751
+For27model's accuracy on heldout OOD data: 0.9964664310954063
+For28model's accuracy on heldout OOD data: 0.9952885747938751
+For29model's accuracy on heldout OOD data: 0.9941107184923439
+For30model's accuracy on heldout OOD data: 0.9929328621908127
+For31model's accuracy on heldout OOD data: 0.9988221436984688
+For32model's accuracy on heldout OOD data: 0.9941107184923439
+For33model's accuracy on heldout OOD data: 0.9964664310954063
+For34model's accuracy on heldout OOD data: 0.9952885747938751
+For35model's accuracy on heldout OOD data: 0.9964664310954063
+For36model's accuracy on heldout OOD data: 0.9941107184923439
+For37model's accuracy on heldout OOD data: 0.9964664310954063
+For38model's accuracy on heldout OOD data: 0.9929328621908127
+For39model's accuracy on heldout OOD data: 0.9905771495877503
+For40model's accuracy on heldout OOD data: 0.9952885747938751
+For41model's accuracy on heldout OOD data: 0.9976442873969376
+For42model's accuracy on heldout OOD data: 0.9952885747938751
+For43model's accuracy on heldout OOD data: 0.9964664310954063
+For44model's accuracy on heldout OOD data: 0.9929328621908127
+For45model's accuracy on heldout OOD data: 0.9952885747938751
+For46model's accuracy on heldout OOD data: 0.9941107184923439
+For47model's accuracy on heldout OOD data: 0.9941107184923439
+For48model's accuracy on heldout OOD data: 0.9952885747938751
+For49model's accuracy on heldout OOD data: 0.9964664310954063
+For50model's accuracy on heldout OOD data: 0.9917550058892816
+For51model's accuracy on heldout OOD data: 0.9905771495877503
+For52model's accuracy on heldout OOD data: 0.9941107184923439
+For53model's accuracy on heldout OOD data: 0.9929328621908127
+For54model's accuracy on heldout OOD data: 0.9941107184923439
+For55model's accuracy on heldout OOD data: 0.9941107184923439
+For56model's accuracy on heldout OOD data: 0.9964664310954063
+For57model's accuracy on heldout OOD data: 0.9929328621908127
+For58model's accuracy on heldout OOD data: 0.9976442873969376
+For59model's accuracy on heldout OOD data: 0.9988221436984688
+For60model's accuracy on heldout OOD data: 0.9941107184923439
+For61model's accuracy on heldout OOD data: 0.9976442873969376
+For62model's accuracy on heldout OOD data: 0.9964664310954063
+For63model's accuracy on heldout OOD data: 0.9941107184923439
+For64model's accuracy on heldout OOD data: 0.9952885747938751
+For65model's accuracy on heldout OOD data: 0.9976442873969376
+For66model's accuracy on heldout OOD data: 0.9976442873969376
+For67model's accuracy on heldout OOD data: 0.9917550058892816
+For68model's accuracy on heldout OOD data: 0.9964664310954063
+For69model's accuracy on heldout OOD data: 0.9964664310954063
+For70model's accuracy on heldout OOD data: 0.9952885747938751
+For71model's accuracy on heldout OOD data: 0.9941107184923439
+For72model's accuracy on heldout OOD data: 0.9964664310954063
+For73model's accuracy on heldout OOD data: 1.0
+For74model's accuracy on heldout OOD data: 0.9952885747938751
+For75model's accuracy on heldout OOD data: 0.9929328621908127
+For76model's accuracy on heldout OOD data: 0.9964664310954063
+For77model's accuracy on heldout OOD data: 0.9952885747938751
+For78model's accuracy on heldout OOD data: 0.9964664310954063
+For79model's accuracy on heldout OOD data: 0.9952885747938751
+For80model's accuracy on heldout OOD data: 0.9964664310954063
+For81model's accuracy on heldout OOD data: 0.9929328621908127
+For82model's accuracy on heldout OOD data: 0.9964664310954063
+For83model's accuracy on heldout OOD data: 0.9941107184923439
+For84model's accuracy on heldout OOD data: 0.9941107184923439
+For85model's accuracy on heldout OOD data: 0.9976442873969376
+For86model's accuracy on heldout OOD data: 0.9952885747938751
+For87model's accuracy on heldout OOD data: 0.9952885747938751
+For88model's accuracy on heldout OOD data: 0.9964664310954063
+For89model's accuracy on heldout OOD data: 0.9964664310954063
+For90model's accuracy on heldout OOD data: 0.9964664310954063
+For91model's accuracy on heldout OOD data: 0.9929328621908127
+For92model's accuracy on heldout OOD data: 0.9964664310954063
+For93model's accuracy on heldout OOD data: 0.9952885747938751
+For94model's accuracy on heldout OOD data: 0.9964664310954063
+For95model's accuracy on heldout OOD data: 0.9952885747938751
+For96model's accuracy on heldout OOD data: 0.9952885747938751
+For97model's accuracy on heldout OOD data: 0.9941107184923439
+For98model's accuracy on heldout OOD data: 0.9976442873969376
+For99model's accuracy on heldout OOD data: 0.9952885747938751
+For100models, test accuracy avg and stddev: 0.9880269058295964 0.0035007269602760883
+For100models, validation accuracy (on held out OOD) avg and stddev: 0.9951118963486455 0.001872569269209023
+Round 1: No of OOD samples for which labelling is done: 4155
+
+Round 2 Details:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 10013 831 2671
 numeric_label
-0    2102
-1    2151
-2    2622
-3    2449
+0    1460
+1    1631
+2    2373
+3    2086
 Name: numeric_label, dtype: int64
+
 Round 2 ends.
 
 
-No of samples in OOD is less than 5\% of the original
+
+Round 3 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 10013 831 2671
+For0model's accuracy on heldout OOD data: 0.9855595667870036
+For1model's accuracy on heldout OOD data: 0.9843561973525873
+For2model's accuracy on heldout OOD data: 0.9879663056558363
+For3model's accuracy on heldout OOD data: 0.9891696750902527
+For4model's accuracy on heldout OOD data: 0.98676293622142
+For5model's accuracy on heldout OOD data: 0.98676293622142
+For6model's accuracy on heldout OOD data: 0.9891696750902527
+For7model's accuracy on heldout OOD data: 0.9855595667870036
+For8model's accuracy on heldout OOD data: 0.9903730445246691
+For9model's accuracy on heldout OOD data: 0.9903730445246691
+For10model's accuracy on heldout OOD data: 0.9891696750902527
+For11model's accuracy on heldout OOD data: 0.9891696750902527
+For12model's accuracy on heldout OOD data: 0.9903730445246691
+For13model's accuracy on heldout OOD data: 0.9879663056558363
+For14model's accuracy on heldout OOD data: 0.98676293622142
+For15model's accuracy on heldout OOD data: 0.9891696750902527
+For16model's accuracy on heldout OOD data: 0.9831528279181708
+For17model's accuracy on heldout OOD data: 0.98676293622142
+For18model's accuracy on heldout OOD data: 0.9879663056558363
+For19model's accuracy on heldout OOD data: 0.9819494584837545
+For20model's accuracy on heldout OOD data: 0.9879663056558363
+For21model's accuracy on heldout OOD data: 0.9879663056558363
+For22model's accuracy on heldout OOD data: 0.9855595667870036
+For23model's accuracy on heldout OOD data: 0.98676293622142
+For24model's accuracy on heldout OOD data: 0.9843561973525873
+For25model's accuracy on heldout OOD data: 0.9855595667870036
+For26model's accuracy on heldout OOD data: 0.9879663056558363
+For27model's accuracy on heldout OOD data: 0.9915764139590855
+For28model's accuracy on heldout OOD data: 0.98676293622142
+For29model's accuracy on heldout OOD data: 0.9855595667870036
+For30model's accuracy on heldout OOD data: 0.9903730445246691
+For31model's accuracy on heldout OOD data: 0.9879663056558363
+For32model's accuracy on heldout OOD data: 0.98676293622142
+For33model's accuracy on heldout OOD data: 0.9903730445246691
+For34model's accuracy on heldout OOD data: 0.98676293622142
+For35model's accuracy on heldout OOD data: 0.9903730445246691
+For36model's accuracy on heldout OOD data: 0.9855595667870036
+For37model's accuracy on heldout OOD data: 0.9855595667870036
+For38model's accuracy on heldout OOD data: 0.98676293622142
+For39model's accuracy on heldout OOD data: 0.9879663056558363
+For40model's accuracy on heldout OOD data: 0.9903730445246691
+For41model's accuracy on heldout OOD data: 0.9879663056558363
+For42model's accuracy on heldout OOD data: 0.9903730445246691
+For43model's accuracy on heldout OOD data: 0.9879663056558363
+For44model's accuracy on heldout OOD data: 0.9855595667870036
+For45model's accuracy on heldout OOD data: 0.9891696750902527
+For46model's accuracy on heldout OOD data: 0.9819494584837545
+For47model's accuracy on heldout OOD data: 0.9879663056558363
+For48model's accuracy on heldout OOD data: 0.9855595667870036
+For49model's accuracy on heldout OOD data: 0.9855595667870036
+For50model's accuracy on heldout OOD data: 0.9879663056558363
+For51model's accuracy on heldout OOD data: 0.9855595667870036
+For52model's accuracy on heldout OOD data: 0.9891696750902527
+For53model's accuracy on heldout OOD data: 0.9879663056558363
+For54model's accuracy on heldout OOD data: 0.9855595667870036
+For55model's accuracy on heldout OOD data: 0.9891696750902527
+For56model's accuracy on heldout OOD data: 0.9843561973525873
+For57model's accuracy on heldout OOD data: 0.9903730445246691
+For58model's accuracy on heldout OOD data: 0.9891696750902527
+For59model's accuracy on heldout OOD data: 0.9891696750902527
+For60model's accuracy on heldout OOD data: 0.98676293622142
+For61model's accuracy on heldout OOD data: 0.9879663056558363
+For62model's accuracy on heldout OOD data: 0.9891696750902527
+For63model's accuracy on heldout OOD data: 0.9831528279181708
+For64model's accuracy on heldout OOD data: 0.98676293622142
+For65model's accuracy on heldout OOD data: 0.9903730445246691
+For66model's accuracy on heldout OOD data: 0.9855595667870036
+For67model's accuracy on heldout OOD data: 0.98676293622142
+For68model's accuracy on heldout OOD data: 0.9879663056558363
+For69model's accuracy on heldout OOD data: 0.9843561973525873
+For70model's accuracy on heldout OOD data: 0.98676293622142
+For71model's accuracy on heldout OOD data: 0.9855595667870036
+For72model's accuracy on heldout OOD data: 0.9795427196149218
+For73model's accuracy on heldout OOD data: 0.9903730445246691
+For74model's accuracy on heldout OOD data: 0.9855595667870036
+For75model's accuracy on heldout OOD data: 0.9855595667870036
+For76model's accuracy on heldout OOD data: 0.9855595667870036
+For77model's accuracy on heldout OOD data: 0.98676293622142
+For78model's accuracy on heldout OOD data: 0.9903730445246691
+For79model's accuracy on heldout OOD data: 0.9879663056558363
+For80model's accuracy on heldout OOD data: 0.9903730445246691
+For81model's accuracy on heldout OOD data: 0.9879663056558363
+For82model's accuracy on heldout OOD data: 0.9807460890493381
+For83model's accuracy on heldout OOD data: 0.9819494584837545
+For84model's accuracy on heldout OOD data: 0.98676293622142
+For85model's accuracy on heldout OOD data: 0.9903730445246691
+For86model's accuracy on heldout OOD data: 0.9903730445246691
+For87model's accuracy on heldout OOD data: 0.9915764139590855
+For88model's accuracy on heldout OOD data: 0.98676293622142
+For89model's accuracy on heldout OOD data: 0.9915764139590855
+For90model's accuracy on heldout OOD data: 0.9855595667870036
+For91model's accuracy on heldout OOD data: 0.9831528279181708
+For92model's accuracy on heldout OOD data: 0.9843561973525873
+For93model's accuracy on heldout OOD data: 0.9939831528279182
+For94model's accuracy on heldout OOD data: 0.9879663056558363
+For95model's accuracy on heldout OOD data: 0.9891696750902527
+For96model's accuracy on heldout OOD data: 0.9879663056558363
+For97model's accuracy on heldout OOD data: 0.98676293622142
+For98model's accuracy on heldout OOD data: 0.9855595667870036
+For99model's accuracy on heldout OOD data: 0.9891696750902527
+For100models, test accuracy avg and stddev: 0.9876834747878184 0.0029197057684197535
+For100models, validation accuracy (on held out OOD) avg and stddev: 0.9873285198555954 0.0025325423654304026
+Round 1: No of OOD samples for which labelling is done: 1054
+
+Round 3 Details:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 10856 211 1617
+numeric_label
+0    1523
+1    1683
+2    2410
+3    2157
+Name: numeric_label, dtype: int64
+
+Round 3 ends.
+
+
+
+Round 4 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 10856 211 1617
+For0model's accuracy on heldout OOD data: 0.981042654028436
+For1model's accuracy on heldout OOD data: 0.985781990521327
+For2model's accuracy on heldout OOD data: 0.995260663507109
+For3model's accuracy on heldout OOD data: 0.990521327014218
+For4model's accuracy on heldout OOD data: 0.990521327014218
+For5model's accuracy on heldout OOD data: 0.985781990521327
+For6model's accuracy on heldout OOD data: 0.985781990521327
+For7model's accuracy on heldout OOD data: 0.990521327014218
+For8model's accuracy on heldout OOD data: 0.985781990521327
+For9model's accuracy on heldout OOD data: 0.990521327014218
+For10model's accuracy on heldout OOD data: 0.985781990521327
+For11model's accuracy on heldout OOD data: 0.985781990521327
+For12model's accuracy on heldout OOD data: 0.981042654028436
+For13model's accuracy on heldout OOD data: 0.990521327014218
+For14model's accuracy on heldout OOD data: 0.985781990521327
+For15model's accuracy on heldout OOD data: 0.966824644549763
+For16model's accuracy on heldout OOD data: 0.990521327014218
+For17model's accuracy on heldout OOD data: 0.985781990521327
+For18model's accuracy on heldout OOD data: 0.976303317535545
+For19model's accuracy on heldout OOD data: 0.985781990521327
+For20model's accuracy on heldout OOD data: 0.985781990521327
+For21model's accuracy on heldout OOD data: 0.990521327014218
+For22model's accuracy on heldout OOD data: 0.985781990521327
+For23model's accuracy on heldout OOD data: 0.990521327014218
+For24model's accuracy on heldout OOD data: 0.9715639810426541
+For25model's accuracy on heldout OOD data: 0.990521327014218
+For26model's accuracy on heldout OOD data: 0.976303317535545
+For27model's accuracy on heldout OOD data: 0.985781990521327
+For28model's accuracy on heldout OOD data: 0.985781990521327
+For29model's accuracy on heldout OOD data: 0.990521327014218
+For30model's accuracy on heldout OOD data: 1.0
+For31model's accuracy on heldout OOD data: 0.990521327014218
+For32model's accuracy on heldout OOD data: 0.985781990521327
+For33model's accuracy on heldout OOD data: 0.990521327014218
+For34model's accuracy on heldout OOD data: 0.995260663507109
+For35model's accuracy on heldout OOD data: 0.990521327014218
+For36model's accuracy on heldout OOD data: 0.976303317535545
+For37model's accuracy on heldout OOD data: 0.985781990521327
+For38model's accuracy on heldout OOD data: 0.985781990521327
+For39model's accuracy on heldout OOD data: 0.990521327014218
+For40model's accuracy on heldout OOD data: 0.981042654028436
+For41model's accuracy on heldout OOD data: 0.985781990521327
+For42model's accuracy on heldout OOD data: 0.981042654028436
+For43model's accuracy on heldout OOD data: 0.985781990521327
+For44model's accuracy on heldout OOD data: 1.0
+For45model's accuracy on heldout OOD data: 0.990521327014218
+For46model's accuracy on heldout OOD data: 0.990521327014218
+For47model's accuracy on heldout OOD data: 0.981042654028436
+For48model's accuracy on heldout OOD data: 0.981042654028436
+For49model's accuracy on heldout OOD data: 0.981042654028436
+For50model's accuracy on heldout OOD data: 0.976303317535545
+For51model's accuracy on heldout OOD data: 0.9715639810426541
+For52model's accuracy on heldout OOD data: 0.990521327014218
+For53model's accuracy on heldout OOD data: 0.985781990521327
+For54model's accuracy on heldout OOD data: 0.990521327014218
+For55model's accuracy on heldout OOD data: 0.985781990521327
+For56model's accuracy on heldout OOD data: 0.985781990521327
+For57model's accuracy on heldout OOD data: 0.981042654028436
+For58model's accuracy on heldout OOD data: 0.990521327014218
+For59model's accuracy on heldout OOD data: 0.985781990521327
+For60model's accuracy on heldout OOD data: 0.981042654028436
+For61model's accuracy on heldout OOD data: 0.990521327014218
+For62model's accuracy on heldout OOD data: 0.985781990521327
+For63model's accuracy on heldout OOD data: 0.976303317535545
+For64model's accuracy on heldout OOD data: 0.990521327014218
+For65model's accuracy on heldout OOD data: 0.990521327014218
+For66model's accuracy on heldout OOD data: 0.995260663507109
+For67model's accuracy on heldout OOD data: 0.985781990521327
+For68model's accuracy on heldout OOD data: 0.981042654028436
+For69model's accuracy on heldout OOD data: 0.990521327014218
+For70model's accuracy on heldout OOD data: 0.985781990521327
+For71model's accuracy on heldout OOD data: 0.985781990521327
+For72model's accuracy on heldout OOD data: 0.995260663507109
+For73model's accuracy on heldout OOD data: 0.985781990521327
+For74model's accuracy on heldout OOD data: 0.995260663507109
+For75model's accuracy on heldout OOD data: 0.981042654028436
+For76model's accuracy on heldout OOD data: 0.985781990521327
+For77model's accuracy on heldout OOD data: 0.981042654028436
+For78model's accuracy on heldout OOD data: 0.990521327014218
+For79model's accuracy on heldout OOD data: 0.985781990521327
+For80model's accuracy on heldout OOD data: 0.995260663507109
+For81model's accuracy on heldout OOD data: 0.995260663507109
+For82model's accuracy on heldout OOD data: 0.981042654028436
+For83model's accuracy on heldout OOD data: 0.981042654028436
+For84model's accuracy on heldout OOD data: 0.990521327014218
+For85model's accuracy on heldout OOD data: 0.9620853080568721
+For86model's accuracy on heldout OOD data: 0.995260663507109
+For87model's accuracy on heldout OOD data: 0.990521327014218
+For88model's accuracy on heldout OOD data: 0.985781990521327
+For89model's accuracy on heldout OOD data: 0.981042654028436
+For90model's accuracy on heldout OOD data: 0.990521327014218
+For91model's accuracy on heldout OOD data: 0.990521327014218
+For92model's accuracy on heldout OOD data: 0.995260663507109
+For93model's accuracy on heldout OOD data: 0.981042654028436
+For94model's accuracy on heldout OOD data: 0.976303317535545
+For95model's accuracy on heldout OOD data: 0.985781990521327
+For96model's accuracy on heldout OOD data: 0.985781990521327
+For97model's accuracy on heldout OOD data: 0.985781990521327
+For98model's accuracy on heldout OOD data: 0.976303317535545
+For99model's accuracy on heldout OOD data: 0.995260663507109
+For100models, test accuracy avg and stddev: 0.9859760589318598 0.0025777919843091236
+For100models, validation accuracy (on held out OOD) avg and stddev: 0.9862085308056873 0.006501533667397343
+Round 1: No of OOD samples for which labelling is done: 337
+
+Round 4 Details:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11125 68 1280
+numeric_label
+0    1539
+1    1723
+2    2436
+3    2201
+Name: numeric_label, dtype: int64
+
+Round 4 ends.
+
+
+
+Round 5 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11125 68 1280
+For0model's accuracy on heldout OOD data: 1.0
+For1model's accuracy on heldout OOD data: 1.0
+For2model's accuracy on heldout OOD data: 0.9852941176470589
+For3model's accuracy on heldout OOD data: 1.0
+For4model's accuracy on heldout OOD data: 0.9852941176470589
+For5model's accuracy on heldout OOD data: 1.0
+For6model's accuracy on heldout OOD data: 1.0
+For7model's accuracy on heldout OOD data: 0.9852941176470589
+For8model's accuracy on heldout OOD data: 1.0
+For9model's accuracy on heldout OOD data: 0.9852941176470589
+For10model's accuracy on heldout OOD data: 1.0
+For11model's accuracy on heldout OOD data: 1.0
+For12model's accuracy on heldout OOD data: 1.0
+For13model's accuracy on heldout OOD data: 1.0
+For14model's accuracy on heldout OOD data: 1.0
+For15model's accuracy on heldout OOD data: 1.0
+For16model's accuracy on heldout OOD data: 1.0
+For17model's accuracy on heldout OOD data: 1.0
+For18model's accuracy on heldout OOD data: 1.0
+For19model's accuracy on heldout OOD data: 1.0
+For20model's accuracy on heldout OOD data: 1.0
+For21model's accuracy on heldout OOD data: 1.0
+For22model's accuracy on heldout OOD data: 0.9705882352941176
+For23model's accuracy on heldout OOD data: 1.0
+For24model's accuracy on heldout OOD data: 0.9705882352941176
+For25model's accuracy on heldout OOD data: 1.0
+For26model's accuracy on heldout OOD data: 0.9852941176470589
+For27model's accuracy on heldout OOD data: 0.9852941176470589
+For28model's accuracy on heldout OOD data: 0.9852941176470589
+For29model's accuracy on heldout OOD data: 1.0
+For30model's accuracy on heldout OOD data: 1.0
+For31model's accuracy on heldout OOD data: 1.0
+For32model's accuracy on heldout OOD data: 0.9852941176470589
+For33model's accuracy on heldout OOD data: 1.0
+For34model's accuracy on heldout OOD data: 1.0
+For35model's accuracy on heldout OOD data: 1.0
+For36model's accuracy on heldout OOD data: 0.9852941176470589
+For37model's accuracy on heldout OOD data: 1.0
+For38model's accuracy on heldout OOD data: 1.0
+For39model's accuracy on heldout OOD data: 1.0
+For40model's accuracy on heldout OOD data: 1.0
+For41model's accuracy on heldout OOD data: 1.0
+For42model's accuracy on heldout OOD data: 1.0
+For43model's accuracy on heldout OOD data: 1.0
+For44model's accuracy on heldout OOD data: 1.0
+For45model's accuracy on heldout OOD data: 1.0
+For46model's accuracy on heldout OOD data: 1.0
+For47model's accuracy on heldout OOD data: 1.0
+For48model's accuracy on heldout OOD data: 0.9558823529411765
+For49model's accuracy on heldout OOD data: 0.9705882352941176
+For50model's accuracy on heldout OOD data: 1.0
+For51model's accuracy on heldout OOD data: 1.0
+For52model's accuracy on heldout OOD data: 0.9852941176470589
+For53model's accuracy on heldout OOD data: 1.0
+For54model's accuracy on heldout OOD data: 1.0
+For55model's accuracy on heldout OOD data: 1.0
+For56model's accuracy on heldout OOD data: 0.9852941176470589
+For57model's accuracy on heldout OOD data: 1.0
+For58model's accuracy on heldout OOD data: 1.0
+For59model's accuracy on heldout OOD data: 1.0
+For60model's accuracy on heldout OOD data: 1.0
+For61model's accuracy on heldout OOD data: 1.0
+For62model's accuracy on heldout OOD data: 1.0
+For63model's accuracy on heldout OOD data: 1.0
+For64model's accuracy on heldout OOD data: 1.0
+For65model's accuracy on heldout OOD data: 1.0
+For66model's accuracy on heldout OOD data: 0.9852941176470589
+For67model's accuracy on heldout OOD data: 0.9852941176470589
+For68model's accuracy on heldout OOD data: 0.9852941176470589
+For69model's accuracy on heldout OOD data: 0.9852941176470589
+For70model's accuracy on heldout OOD data: 1.0
+For71model's accuracy on heldout OOD data: 1.0
+For72model's accuracy on heldout OOD data: 0.9852941176470589
+For73model's accuracy on heldout OOD data: 1.0
+For74model's accuracy on heldout OOD data: 1.0
+For75model's accuracy on heldout OOD data: 1.0
+For76model's accuracy on heldout OOD data: 1.0
+For77model's accuracy on heldout OOD data: 0.9852941176470589
+For78model's accuracy on heldout OOD data: 1.0
+For79model's accuracy on heldout OOD data: 1.0
+For80model's accuracy on heldout OOD data: 0.9852941176470589
+For81model's accuracy on heldout OOD data: 0.9852941176470589
+For82model's accuracy on heldout OOD data: 1.0
+For83model's accuracy on heldout OOD data: 1.0
+For84model's accuracy on heldout OOD data: 1.0
+For85model's accuracy on heldout OOD data: 0.9852941176470589
+For86model's accuracy on heldout OOD data: 0.9705882352941176
+For87model's accuracy on heldout OOD data: 1.0
+For88model's accuracy on heldout OOD data: 1.0
+For89model's accuracy on heldout OOD data: 0.9705882352941176
+For90model's accuracy on heldout OOD data: 0.9852941176470589
+For91model's accuracy on heldout OOD data: 1.0
+For92model's accuracy on heldout OOD data: 0.9852941176470589
+For93model's accuracy on heldout OOD data: 1.0
+For94model's accuracy on heldout OOD data: 0.9705882352941176
+For95model's accuracy on heldout OOD data: 0.9852941176470589
+For96model's accuracy on heldout OOD data: 1.0
+For97model's accuracy on heldout OOD data: 1.0
+For98model's accuracy on heldout OOD data: 1.0
+For99model's accuracy on heldout OOD data: 1.0
+For100models, test accuracy avg and stddev: 0.984885393258427 0.002472853752469155
+For100models, validation accuracy (on held out OOD) avg and stddev: 0.9944117647058823 0.009480447918403634
+Round 1: No of OOD samples for which labelling is done: 172
+
+Round 5 Details:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11262 35 1108
+numeric_label
+0    1560
+1    1737
+2    2459
+3    2247
+Name: numeric_label, dtype: int64
+
+Round 5 ends.
+
+
+
+Round 6 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11262 35 1108
+For0model's accuracy on heldout OOD data: 1.0
+For1model's accuracy on heldout OOD data: 1.0
+For2model's accuracy on heldout OOD data: 0.9714285714285714
+For3model's accuracy on heldout OOD data: 1.0
+For4model's accuracy on heldout OOD data: 0.9714285714285714
+For5model's accuracy on heldout OOD data: 1.0
+For6model's accuracy on heldout OOD data: 0.9428571428571428
+For7model's accuracy on heldout OOD data: 1.0
+For8model's accuracy on heldout OOD data: 0.9714285714285714
+For9model's accuracy on heldout OOD data: 1.0
+For10model's accuracy on heldout OOD data: 0.9714285714285714
+For11model's accuracy on heldout OOD data: 0.9714285714285714
+For12model's accuracy on heldout OOD data: 1.0
+For13model's accuracy on heldout OOD data: 0.9714285714285714
+For14model's accuracy on heldout OOD data: 1.0
+For15model's accuracy on heldout OOD data: 1.0
+For16model's accuracy on heldout OOD data: 0.9714285714285714
+For17model's accuracy on heldout OOD data: 1.0
+For18model's accuracy on heldout OOD data: 1.0
+For19model's accuracy on heldout OOD data: 1.0
+For20model's accuracy on heldout OOD data: 1.0
+For21model's accuracy on heldout OOD data: 1.0
+For22model's accuracy on heldout OOD data: 1.0
+For23model's accuracy on heldout OOD data: 1.0
+For24model's accuracy on heldout OOD data: 1.0
+For25model's accuracy on heldout OOD data: 0.9714285714285714
+For26model's accuracy on heldout OOD data: 0.9714285714285714
+For27model's accuracy on heldout OOD data: 1.0
+For28model's accuracy on heldout OOD data: 1.0
+For29model's accuracy on heldout OOD data: 1.0
+For30model's accuracy on heldout OOD data: 1.0
+For31model's accuracy on heldout OOD data: 1.0
+For32model's accuracy on heldout OOD data: 0.9714285714285714
+For33model's accuracy on heldout OOD data: 0.9714285714285714
+For34model's accuracy on heldout OOD data: 1.0
+For35model's accuracy on heldout OOD data: 0.9714285714285714
+For36model's accuracy on heldout OOD data: 1.0
+For37model's accuracy on heldout OOD data: 1.0
+For38model's accuracy on heldout OOD data: 1.0
+For39model's accuracy on heldout OOD data: 1.0
+For40model's accuracy on heldout OOD data: 1.0
+For41model's accuracy on heldout OOD data: 1.0
+For42model's accuracy on heldout OOD data: 1.0
+For43model's accuracy on heldout OOD data: 0.9714285714285714
+For44model's accuracy on heldout OOD data: 1.0
+For45model's accuracy on heldout OOD data: 1.0
+For46model's accuracy on heldout OOD data: 1.0
+For47model's accuracy on heldout OOD data: 0.9714285714285714
+For48model's accuracy on heldout OOD data: 0.9428571428571428
+For49model's accuracy on heldout OOD data: 1.0
+For50model's accuracy on heldout OOD data: 0.9714285714285714
+For51model's accuracy on heldout OOD data: 1.0
+For52model's accuracy on heldout OOD data: 1.0
+For53model's accuracy on heldout OOD data: 0.9714285714285714
+For54model's accuracy on heldout OOD data: 1.0
+For55model's accuracy on heldout OOD data: 0.9714285714285714
+For56model's accuracy on heldout OOD data: 1.0
+For57model's accuracy on heldout OOD data: 1.0
+For58model's accuracy on heldout OOD data: 1.0
+For59model's accuracy on heldout OOD data: 1.0
+For60model's accuracy on heldout OOD data: 1.0
+For61model's accuracy on heldout OOD data: 0.9428571428571428
+For62model's accuracy on heldout OOD data: 1.0
+For63model's accuracy on heldout OOD data: 0.9714285714285714
+For64model's accuracy on heldout OOD data: 1.0
+For65model's accuracy on heldout OOD data: 0.9714285714285714
+For66model's accuracy on heldout OOD data: 1.0
+For67model's accuracy on heldout OOD data: 1.0
+For68model's accuracy on heldout OOD data: 1.0
+For69model's accuracy on heldout OOD data: 1.0
+For70model's accuracy on heldout OOD data: 1.0
+For71model's accuracy on heldout OOD data: 1.0
+For72model's accuracy on heldout OOD data: 0.9714285714285714
+For73model's accuracy on heldout OOD data: 1.0
+For74model's accuracy on heldout OOD data: 1.0
+For75model's accuracy on heldout OOD data: 0.9714285714285714
+For76model's accuracy on heldout OOD data: 0.9714285714285714
+For77model's accuracy on heldout OOD data: 1.0
+For78model's accuracy on heldout OOD data: 1.0
+For79model's accuracy on heldout OOD data: 1.0
+For80model's accuracy on heldout OOD data: 1.0
+For81model's accuracy on heldout OOD data: 1.0
+For82model's accuracy on heldout OOD data: 1.0
+For83model's accuracy on heldout OOD data: 1.0
+For84model's accuracy on heldout OOD data: 1.0
+For85model's accuracy on heldout OOD data: 1.0
+For86model's accuracy on heldout OOD data: 0.9714285714285714
+For87model's accuracy on heldout OOD data: 1.0
+For88model's accuracy on heldout OOD data: 0.9714285714285714
+For89model's accuracy on heldout OOD data: 1.0
+For90model's accuracy on heldout OOD data: 1.0
+For91model's accuracy on heldout OOD data: 1.0
+For92model's accuracy on heldout OOD data: 1.0
+For93model's accuracy on heldout OOD data: 1.0
+For94model's accuracy on heldout OOD data: 0.9714285714285714
+For95model's accuracy on heldout OOD data: 1.0
+For96model's accuracy on heldout OOD data: 1.0
+For97model's accuracy on heldout OOD data: 1.0
+For98model's accuracy on heldout OOD data: 1.0
+For99model's accuracy on heldout OOD data: 0.9714285714285714
+For100models, test accuracy avg and stddev: 0.9847359076786506 0.0026571133715397443
+For100models, validation accuracy (on held out OOD) avg and stddev: 0.990857142857143 0.015053645568365139
+Round 1: No of OOD samples for which labelling is done: 85
+
+Round 6 Details:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11330 17 1023
+numeric_label
+0    1568
+1    1753
+2    2462
+3    2270
+Name: numeric_label, dtype: int64
+
+Round 6 ends.
+
+
+
+Round 7 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11330 17 1023
+For0model's accuracy on heldout OOD data: 0.9411764705882353
+For1model's accuracy on heldout OOD data: 1.0
+For2model's accuracy on heldout OOD data: 1.0
+For3model's accuracy on heldout OOD data: 1.0
+For4model's accuracy on heldout OOD data: 1.0
+For5model's accuracy on heldout OOD data: 1.0
+For6model's accuracy on heldout OOD data: 0.9411764705882353
+For7model's accuracy on heldout OOD data: 1.0
+For8model's accuracy on heldout OOD data: 0.9411764705882353
+For9model's accuracy on heldout OOD data: 1.0
+For10model's accuracy on heldout OOD data: 0.9411764705882353
+For11model's accuracy on heldout OOD data: 1.0
+For12model's accuracy on heldout OOD data: 1.0
+For13model's accuracy on heldout OOD data: 1.0
+For14model's accuracy on heldout OOD data: 1.0
+For15model's accuracy on heldout OOD data: 0.9411764705882353
+For16model's accuracy on heldout OOD data: 1.0
+For17model's accuracy on heldout OOD data: 1.0
+For18model's accuracy on heldout OOD data: 1.0
+For19model's accuracy on heldout OOD data: 0.9411764705882353
+For20model's accuracy on heldout OOD data: 0.9411764705882353
+For21model's accuracy on heldout OOD data: 1.0
+For22model's accuracy on heldout OOD data: 1.0
+For23model's accuracy on heldout OOD data: 0.9411764705882353
+For24model's accuracy on heldout OOD data: 0.8823529411764706
+For25model's accuracy on heldout OOD data: 0.9411764705882353
+For26model's accuracy on heldout OOD data: 1.0
+For27model's accuracy on heldout OOD data: 0.9411764705882353
+For28model's accuracy on heldout OOD data: 1.0
+For29model's accuracy on heldout OOD data: 1.0
+For30model's accuracy on heldout OOD data: 0.9411764705882353
+For31model's accuracy on heldout OOD data: 1.0
+For32model's accuracy on heldout OOD data: 1.0
+For33model's accuracy on heldout OOD data: 0.9411764705882353
+For34model's accuracy on heldout OOD data: 1.0
+For35model's accuracy on heldout OOD data: 0.9411764705882353
+For36model's accuracy on heldout OOD data: 1.0
+For37model's accuracy on heldout OOD data: 1.0
+For38model's accuracy on heldout OOD data: 1.0
+For39model's accuracy on heldout OOD data: 1.0
+For40model's accuracy on heldout OOD data: 1.0
+For41model's accuracy on heldout OOD data: 1.0
+For42model's accuracy on heldout OOD data: 0.8823529411764706
+For43model's accuracy on heldout OOD data: 0.9411764705882353
+For44model's accuracy on heldout OOD data: 0.9411764705882353
+For45model's accuracy on heldout OOD data: 1.0
+For46model's accuracy on heldout OOD data: 1.0
+For47model's accuracy on heldout OOD data: 1.0
+For48model's accuracy on heldout OOD data: 1.0
+For49model's accuracy on heldout OOD data: 1.0
+For50model's accuracy on heldout OOD data: 1.0
+For51model's accuracy on heldout OOD data: 0.9411764705882353
+For52model's accuracy on heldout OOD data: 0.9411764705882353
+For53model's accuracy on heldout OOD data: 0.9411764705882353
+For54model's accuracy on heldout OOD data: 1.0
+For55model's accuracy on heldout OOD data: 1.0
+For56model's accuracy on heldout OOD data: 1.0
+For57model's accuracy on heldout OOD data: 1.0
+For58model's accuracy on heldout OOD data: 1.0
+For59model's accuracy on heldout OOD data: 1.0
+For60model's accuracy on heldout OOD data: 0.9411764705882353
+For61model's accuracy on heldout OOD data: 1.0
+For62model's accuracy on heldout OOD data: 1.0
+For63model's accuracy on heldout OOD data: 0.8823529411764706
+For64model's accuracy on heldout OOD data: 0.9411764705882353
+For65model's accuracy on heldout OOD data: 1.0
+For66model's accuracy on heldout OOD data: 1.0
+For67model's accuracy on heldout OOD data: 1.0
+For68model's accuracy on heldout OOD data: 1.0
+For69model's accuracy on heldout OOD data: 1.0
+For70model's accuracy on heldout OOD data: 1.0
+For71model's accuracy on heldout OOD data: 1.0
+For72model's accuracy on heldout OOD data: 1.0
+For73model's accuracy on heldout OOD data: 1.0
+For74model's accuracy on heldout OOD data: 1.0
+For75model's accuracy on heldout OOD data: 1.0
+For76model's accuracy on heldout OOD data: 1.0
+For77model's accuracy on heldout OOD data: 0.9411764705882353
+For78model's accuracy on heldout OOD data: 0.9411764705882353
+For79model's accuracy on heldout OOD data: 1.0
+For80model's accuracy on heldout OOD data: 1.0
+For81model's accuracy on heldout OOD data: 0.9411764705882353
+For82model's accuracy on heldout OOD data: 1.0
+For83model's accuracy on heldout OOD data: 1.0
+For84model's accuracy on heldout OOD data: 0.9411764705882353
+For85model's accuracy on heldout OOD data: 1.0
+For86model's accuracy on heldout OOD data: 1.0
+For87model's accuracy on heldout OOD data: 1.0
+For88model's accuracy on heldout OOD data: 0.9411764705882353
+For89model's accuracy on heldout OOD data: 1.0
+For90model's accuracy on heldout OOD data: 1.0
+For91model's accuracy on heldout OOD data: 0.9411764705882353
+For92model's accuracy on heldout OOD data: 1.0
+For93model's accuracy on heldout OOD data: 1.0
+For94model's accuracy on heldout OOD data: 1.0
+For95model's accuracy on heldout OOD data: 1.0
+For96model's accuracy on heldout OOD data: 1.0
+For97model's accuracy on heldout OOD data: 1.0
+For98model's accuracy on heldout OOD data: 1.0
+For99model's accuracy on heldout OOD data: 1.0
+For100models, test accuracy avg and stddev: 0.9845631067961165 0.002500287241549274
+For100models, validation accuracy (on held out OOD) avg and stddev: 0.9811764705882353 0.030992799699575278
+Round 1: No of OOD samples for which labelling is done: 61
+
+Round 7 Details:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11378 13 962
+numeric_label
+0    1575
+1    1764
+2    2474
+3    2284
+Name: numeric_label, dtype: int64
+
+Round 7 ends.
+
+
+
+Round 8 starts:
+
+Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: 11378 13 962
+For0model's accuracy on heldout OOD data: 1.0
+For1model's accuracy on heldout OOD data: 1.0
