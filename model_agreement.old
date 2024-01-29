@@ -107,9 +107,6 @@ def parseArguments():
     args = parser.parse_args()
 
     return args
- 
- 
-       
 
 if __name__ == '__main__':
     if len(sys.argv) != 11:
@@ -176,8 +173,8 @@ elif dataset == "HD":
     derived_dataset = "Hungary"
 
     # #On bhavesh local machine
-    base_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/processed_cleveland.csv"
-    to_be_labelled_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/preprocessed_hungary.csv"
+    base_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_processed_cleveland.csv"
+    to_be_labelled_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_preprocessed_hungary.csv"
     
 else:
     print("Name of the dataset is not valid!")
@@ -478,12 +475,15 @@ def get_model(model_name):
     model_dict = {'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
           'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
 
-          'SVM':LinearSVC(dual = True, max_iter=10000, random_state=random_state), # For STMFR+TCGA
-        #   'SVM':LinearSVC(max_iter=10000, dual=False, random_state=random_state),
+          #  Prefer dual=False when n_samples > n_features
+          'SVM':LinearSVC(dual = True, max_iter=10000, random_state=random_state), #For STMFR+TCGA
+          # 'SVM':LinearSVC(max_iter=10000, dual=False, random_state=random_state),
 
-          'Decision Tree':DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy',random_state=random_state),
-          'DT':DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy', random_state=random_state),
-
+          # 'Decision Tree':DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy',random_state=random_state),
+          # 'DT':DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy', random_state=random_state),
+          'Decision Tree':DecisionTreeClassifier(random_state=random_state),
+          'DT':DecisionTreeClassifier(random_state=random_state),
+          
           'Random Forest':RandomForestClassifier(n_estimators=10, random_state=random_state),
           'RF':RandomForestClassifier(n_estimators=10, random_state=random_state),
 
@@ -500,11 +500,12 @@ def get_model(model_name):
     model_dict = {'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
           'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
 
+        #  Prefer dual=False when n_samples > n_features 
           # 'SVM':LinearSVC(dual = True, max_iter=10000), For STMFR+TCGA
           'SVM':LinearSVC(max_iter=10000, dual=False, random_state=random_state),
 
-          'Decision Tree':DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy',random_state=random_state),
-          'DT':DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy', random_state=random_state),
+          'Decision Tree':DecisionTreeClassifier(random_state=random_state),
+          'DT':DecisionTreeClassifier(random_state=random_state),
 
           'Random Forest':RandomForestClassifier(n_estimators=10, random_state=random_state),
           'RF':RandomForestClassifier(n_estimators=10, random_state=random_state),

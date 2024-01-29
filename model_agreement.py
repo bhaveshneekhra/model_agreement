@@ -173,8 +173,14 @@ elif dataset == "HD":
     derived_dataset = "Hungary"
 
     # #On bhavesh local machine
-    base_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/processed_cleveland.csv"
-    to_be_labelled_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/preprocessed_hungary.csv"
+    base_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_processed_cleveland.csv"
+    to_be_labelled_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_preprocessed_hungary.csv"
+    
+    
+    # #On lab machine
+    # base_file_path = './UCI_cleveland'
+    # to_be_labelled_file_path = './UCI_hungary'
+
     
 else:
     print("Name of the dataset is not valid!")
@@ -476,6 +482,7 @@ def get_model(model_name):
           'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
 
           #  Prefer dual=False when n_samples > n_features
+          # default value for dual =- True but in future it will be auto
           'SVM':LinearSVC(dual = True, max_iter=10000, random_state=random_state), #For STMFR+TCGA
           # 'SVM':LinearSVC(max_iter=10000, dual=False, random_state=random_state),
 
@@ -497,23 +504,35 @@ def get_model(model_name):
           }
   elif dataset == "HD":
 
-    model_dict = {'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
-          'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
+    model_dict = {
+          # 'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
+          # 'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
+
+          'Logistic Regression':LogisticRegression(n_jobs=-1, random_state=random_state),
+          'LR':LogisticRegression(n_jobs=-1, random_state=random_state),
 
         #  Prefer dual=False when n_samples > n_features 
           # 'SVM':LinearSVC(dual = True, max_iter=10000), For STMFR+TCGA
-          'SVM':LinearSVC(max_iter=10000, dual=False, random_state=random_state),
+          # 'SVM':LinearSVC(max_iter=10000, dual=False, random_state=random_state),
+          'SVM':LinearSVC(dual=False, random_state=random_state),
 
           'Decision Tree':DecisionTreeClassifier(random_state=random_state),
           'DT':DecisionTreeClassifier(random_state=random_state),
 
-          'Random Forest':RandomForestClassifier(n_estimators=10, random_state=random_state),
-          'RF':RandomForestClassifier(n_estimators=10, random_state=random_state),
+          # 'Random Forest':RandomForestClassifier(n_estimators=10, random_state=random_state),
+          # 'RF':RandomForestClassifier(n_estimators=10, random_state=random_state),
+
+          'Random Forest':RandomForestClassifier(random_state=random_state),
+          'RF':RandomForestClassifier(random_state=random_state),
 
           # Had 512, 256 setting for GE data
-          "Neural Network":MLPClassifier(hidden_layer_sizes=[256, 128], solver='sgd', batch_size=32, max_iter=100, random_state=random_state),
-          "NN":MLPClassifier(hidden_layer_sizes=[256, 128], solver='sgd', batch_size=32, max_iter=100, random_state=random_state),
-          "MLP":MLPClassifier(hidden_layer_sizes=[256, 128], solver='sgd', batch_size=32, max_iter=100, random_state=random_state),
+          # "Neural Network":MLPClassifier(hidden_layer_sizes=[256, 128], solver='sgd', batch_size=32, max_iter=100, random_state=random_state),
+          # "NN":MLPClassifier(hidden_layer_sizes=[256, 128], solver='sgd', batch_size=32, max_iter=100, random_state=random_state),
+          # "MLP":MLPClassifier(hidden_layer_sizes=[256, 128], solver='sgd', batch_size=32, max_iter=100, random_state=random_state),
+
+          "Neural Network":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
+          "NN":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
+          "MLP":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
           
           "XGBoost": XGBClassifier(objective='binary:logistic', random_state=random_state),
           "XGB": XGBClassifier(objective='binary:logistic', random_state=random_state)
@@ -1385,7 +1404,7 @@ if dataset == "HD":
     match_labels['match'] = np.where(match_labels['numeric_label_x'] == match_labels['numeric_label_y'], 1, 0)
     count_match = match_labels.groupby(['match'])['match'].value_counts()[1]
     perc_match = (count_match / len(match_labels)) 
-    perc_match
+    #perc_match
 
     # df['que'] = np.where((df['one'] >= df['two']) & (df['one'] <= df['three'])
     #                      , df['one'], np.nan)
@@ -1595,7 +1614,7 @@ reverse_match_labels
 reverse_match_labels['match'] = np.where(reverse_match_labels['numeric_label_x'] == reverse_match_labels['numeric_label_y'], 1, 0)
 count_match = reverse_match_labels.groupby(['match'])['match'].value_counts()[1]
 perc_match = (count_match / len(reverse_match_labels)) 
-perc_match
+# perc_match
 
 logger.info("\n\n1.8a: Reverse derived label %%age match with original labels for %s", base_dataset)
 logger.info("For reverse experiment, %% match of labels between derived %s and original %s dataset: %f!!!\n", base_dataset, base_dataset, perc_match)    
@@ -2129,6 +2148,11 @@ final_results.sort_values(by=['s_no']).to_csv(final_results_save_path+"/"+fname_
 
 # %%
 logger.info("Time to execute the code for the current settings: %.3f", total_time_code_exec)
+
+# %%
+print("\n\n**************\n\n")
+print("Find details in the log file: ",log_file)
+print("\n\n**************\n\n")
 
 # %% [markdown]
 # # End of code

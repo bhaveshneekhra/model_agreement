@@ -4,22 +4,23 @@ echo "Starting the SHELL script!"
 
 echo "There are two datasets: Heart-Disease (HD) and Gene-Expr (GE)"
 
-echo "There are 5 possible models: LR, DT, RF, MLP, XGB."
+echo "There are 6 possible models: LR, SVM, DT, RF, MLP, XGB."
 
-echo "The experiment runs for number of models in the range of (50, 100, step=1)."
+echo "The experiment runs for number of models in the range of (50, 100, step=10)."
 
-echo "The experiment runs with various model agreement rates in the range of (05, 1.0, step=0.1)."
+echo "The experiment runs with various model agreement rates in the range of (0.5, 1.0, step=0.1)."
 
-echo "So for each dataset, there are 5 x 6 x 6 = 180 combinations of the run."
+echo "So for each dataset, there are 6 x 6 x 6 = 216 combinations of the run."
 
 echo "***MLP takes lot of time, run separately.***"
+
 
 dataset_name=("HD")
 # dataset_name = ("HD" "GE")
 
-#model_name=("LR" "SVM" "DT" "RF" "MLP" "XGB")
+model_name=("LR" "DT" "RF" "MLP" "XGB")
 
-model_name=(DT)
+# model_name=("SVM")
 
 # n_models=(100)
 n_models=(50 60 70 80 90 100)
