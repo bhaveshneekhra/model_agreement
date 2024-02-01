@@ -18,7 +18,7 @@ For the original files, we thank the principal investigator responsible for the 
        3. University Hospital, Basel, Switzerland: Matthias Pfisterer, M.D.
        4. V.A. Medical Center, Long Beach and Cleveland Clinic Foundation: Robert Detrano, M.D., Ph.D.
 
-(2) Drive code:
+(2) Driver code:
 
     The shell script run.sh is the driver code for the python file model_agreement.py. This pyhon file contains the main code. 
 
