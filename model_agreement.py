@@ -28,7 +28,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold
 # , StratifiedShuffleSplit
 
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
+# from sklearn.model_selection import BayesSearchCV
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC, LinearSVC
@@ -78,12 +79,14 @@ dataset ="HD"
 
 save_fig_path = "./"+dataset+"/"
 
-model_name = "XGB"
+model_name = "DT"
 random_state = 42
 n_models = 3
 frac_agree = 1.0
 
 test_split_size = 0.2
+
+opt_model= 1
 
 final_results = pd.DataFrame(columns=["s_no", "description","value"])
 
@@ -102,6 +105,7 @@ def parseArguments():
     parser.add_argument("-n","--no_of_models", help="number of models to be used", type=int)
     parser.add_argument("-ar","--agreement_rate", help="Agreement rate among models", type=float)
     parser.add_argument("-dataset", help="Dataset to use (HD for heart disease, GE for gene expression)", type=str)
+    parser.add_argument("-optm","--optimise_model", help="Whether to use default models or optimised models- 0: default 1: optimise", type=float)
 
     # Parse arguments
     args = parser.parse_args()
@@ -109,9 +113,9 @@ def parseArguments():
     return args
 
 if __name__ == '__main__':
-    if len(sys.argv) != 11:
+    if len(sys.argv) != 13:
         print(len(sys.argv))                                                                                                       
-        print("usage: ", sys.argv[0], "[-h] [-sfg SAVE_FIG_PATH] [-m MODEL_NAME] [-n NO_OF_MODELS] [-ar AGREEMENT_RATE] [-dataset DATASET]")  
+        print("usage: ", sys.argv[0], "[-h] [-sfg SAVE_FIG_PATH] [-m MODEL_NAME] [-n NO_OF_MODELS] [-ar AGREEMENT_RATE] [-dataset DATASET] [-optm Whether to optimise model]")  
         sys.exit()                                                                                                         
     # Parse the arguments
     args = parseArguments()
@@ -120,7 +124,10 @@ if __name__ == '__main__':
     n_models = args.__dict__['no_of_models']
     frac_agree = args.__dict__['agreement_rate']
     dataset = args.__dict__['dataset']        
+    opt_model = args.__dict__['optimise_model']        
+
     save_fig_path = "./"+dataset+"/"+model_name+"/"  
+
 
 # %%
 # from codecarbon import EmissionsTracker
@@ -178,10 +185,10 @@ elif dataset == "HD":
     
     
     # #On lab machine
-    # base_file_path = './UCI_cleveland'
-    # to_be_labelled_file_path = './UCI_hungary'
+    # base_file_path = './UCI_cleveland.csv'
+    # to_be_labelled_file_path = './UCI_hungary.csv'
 
-    
+
 else:
     print("Name of the dataset is not valid!")
 
@@ -241,6 +248,8 @@ logging.getLogger('matplotlib.font_manager').setLevel(logging.ERROR)
 logger.info("\n\n\nExperiments is starting with the following settings:\n")
 logger.info("Base Dataset: %s, To be Labelled Dataset: %s", base_dataset, derived_dataset)
 logger.info("Model Name: %s", model_name)
+
+
 logger.info("No. of models: %d", n_models)
 logger.info("Agreement rate among models: %.3f", frac_agree)
 logger.info("Test size other than 5-fold cross-validation: %.3f", test_split_size)
@@ -478,7 +487,8 @@ logging.info(df['numeric_label'].value_counts())
 def get_model(model_name):
   if dataset == "GE":
 
-    model_dict = {'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
+    model_dict = {
+          'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
           'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
 
           #  Prefer dual=False when n_samples > n_features
@@ -502,8 +512,8 @@ def get_model(model_name):
           "XGBoost": XGBClassifier(num_class=4, objective='multi:softmax', random_state=random_state),
           "XGB": XGBClassifier(num_class=4, objective='multi:softmax', random_state=random_state)
           }
-  elif dataset == "HD":
-
+  elif dataset == "HD" and not(opt_model):
+            # Use default models if opt_model = 0 
     model_dict = {
           # 'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
           # 'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
@@ -537,13 +547,40 @@ def get_model(model_name):
           "XGBoost": XGBClassifier(objective='binary:logistic', random_state=random_state),
           "XGB": XGBClassifier(objective='binary:logistic', random_state=random_state)
           }
+  
+  elif dataset == "HD" and opt_model:  
+      # Use optimised models if opt_model = 1
+      model_dict = {
+          
+          # 'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
+          # 'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
+
+          'Logistic Regression':LogisticRegression(max_iter=50, n_jobs=-1, random_state=42, solver='liblinear'),
+          'LR': LogisticRegression(max_iter=50, n_jobs=-1, random_state=42, solver='liblinear'),
+
+          'SVM':LinearSVC(dual=False, random_state=random_state),
+
+          'Decision Tree':DecisionTreeClassifier(min_samples_split = 8, min_samples_leaf = 15, max_depth = 3, criterion = 'gini',random_state=random_state),
+          'DT':DecisionTreeClassifier(min_samples_split = 8, min_samples_leaf = 15, max_depth = 3, criterion = 'gini',random_state=random_state),
+
+          'Random Forest':RandomForestClassifier(n_estimators=10, random_state=random_state),
+          'RF':RandomForestClassifier(n_estimators=10, random_state=random_state),
+
+          "Neural Network":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
+          "NN":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
+          "MLP":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
+          
+          "XGBoost": XGBClassifier(objective='binary:logistic', random_state=random_state),
+          "XGB": XGBClassifier(objective='binary:logistic', random_state=random_state)
+          }
+
 
   model_name = model_name.strip()
 
   if model_name not in model_dict:
     print("Model name should be one of", list(model_dict.keys()))
     print("Please check the entered model name for spelling errors.")
-    exit
+    sys.exit()
 
   else:
     model = model_dict[model_name]
@@ -551,6 +588,8 @@ def get_model(model_name):
 
 # %%
 # plt.rcParams.update({'font.size': 8})
+
+logging.info("\n\nUsing the model: %s\n\n", get_model(model_name))
 
 # %% [markdown]
 # # helper functions
@@ -739,14 +778,211 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # print(hyperopt.pyll.stochastic.sample(space))
 
 # %% [markdown]
-# # RF hyperparameter selection
-# 
+# # hyperparameter selection
+
+# %% [markdown]
+# # 
 
 # %%
-# train, test = train_test_split(df, test_size=test_split_size, random_state=42, shuffle=True)
+# train, test = train_test_split(df, test_size=test_split_size, random_state=random_state, shuffle=True)
 
 # X_train, y_train = train.iloc[:, :-1], train['numeric_label']
 # X_test, y_test = test.iloc[:, :-1], test['numeric_label']
+
+# %% [markdown]
+# # LR
+
+# %%
+# # LR
+
+# model = LogisticRegression(n_jobs=-1, random_state=random_state)
+
+# # model = LogisticRegression(class_weight='balanced', max_iter=500, random_state=42)
+
+# model.fit(X_train, y_train)
+# logger.info("Default model LR's performance: ")
+# report_before = classification_report(model.predict(X_test), y_test)
+# logger.info(report_before)
+
+
+# %%
+# param_grid_lr = {
+#     'max_iter': [50, 100, 200, 250, 500, 750, 1000],                      
+#     'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],   
+#     # 'class_weight': ['balanced']                                    
+# }
+
+# # logModel_grid = GridSearchCV(estimator=model, param_grid=param_grid_lr, verbose=1, cv=10, n_jobs=-1)
+# logModel_grid = RandomizedSearchCV(estimator=model, param_distributions=param_grid_lr, cv=10, n_iter=100, n_jobs=-1, verbose=True, scoring='accuracy')
+
+# logModel_grid.fit(X_train, y_train)
+
+# model = logModel_grid.best_estimator_
+# # model = LogisticRegression(max_iter=100, solver='liblinear', random_state=42, n_jobs=-1)
+
+# model.fit(X_train, y_train)
+
+# logger.info("Best parameteres: ")
+# logger.info(logModel_grid.best_estimator_)
+# logger.info("model LR's performance after best parameter search: ")
+# report_after = classification_report(model.predict(X_test), y_test)
+# logger.info(report_after)
+
+# %% [markdown]
+# HD two classes
+# 
+# LogisticRegression(max_iter=50, n_jobs=-1, random_state=42, solver='liblinear')
+
+# %%
+# print(logModel_grid.best_estimator_)
+# print(report_after)
+
+# %%
+# print(report_before)
+
+# %% [markdown]
+# # SVM
+
+# %%
+# # log-uniform: understand as search over p = exp(x) by varying x
+
+
+# # LinearSVC(max_iter=10000, dual=False, random_state=random_state),
+
+# opt = RandomizedSearchCV(
+#     LinearSVC(),
+#     {
+#         'max_iter': [100, 250, 500, 750, 1000, 5000, 10000], 
+#         'dual': [True, False]
+#     },
+#     n_iter=100,
+#     cv=5,
+#     error_score='raise',
+#      n_jobs=-1,
+#     verbose=True, 
+#     scoring='accuracy'
+# )
+
+# opt.fit(X_train, y_train)
+
+# print("val. score: %s" % opt.best_score_)
+# print("test score: %s" % opt.score(X_test, y_test))
+
+# %%
+# print(opt.best_estimator_)
+# opt.best_estimator_
+
+
+# %% [markdown]
+# LinearSVC(dual=False, max_iter=100)
+
+# %% [markdown]
+# # DT
+
+# %%
+# # DecisionTreeClassifier(min_samples_split = 8, min_samples_leaf = 15, max_depth = 3, criterion = 'gini',random_state=random_state)
+
+
+# opt = RandomizedSearchCV(
+#     DecisionTreeClassifier(),
+#     {
+#         'max_depth':[3, 5, 7, 10, 15],
+#         'min_samples_leaf':[1, 3, 5, 10, 15,20],
+#         'min_samples_split':[2, 4, 6, 8, 10, 12, 16, 18, 20],
+#         'criterion':['log_loss', 'gini','entropy']
+#     },
+#     n_iter=100,
+#     cv=5,
+#     error_score='raise',
+#     n_jobs=-1,
+#     verbose=True, 
+#     scoring='accuracy'
+# )
+
+# opt.fit(X_train, y_train)
+
+
+# print("Best model: %s" % opt.best_estimator_)
+# print("val. score: %s" % opt.best_score_)
+# print("test score: %s" % opt.score(X_test, y_test))
+
+# %%
+# DT_model = DecisionTreeClassifier(min_samples_split = 8, min_samples_leaf = 15, max_depth = 3, criterion = 'gini',random_state=random_state)
+# DT_model.fit(X_train, y_train)
+
+# DT_model.score(X_test, y_test)
+
+# %% [markdown]
+# # RF 
+
+# %%
+# # RandomForestClassifier(n_estimators=10, random_state=random_state),
+
+
+# opt = RandomizedSearchCV(
+#     RandomForestClassifier(),
+#     {
+#         'n_estimators':[20,50, 100, 200, 500],
+#         'criterion':['log_loss', 'gini','entropy']
+#     },
+#     n_iter=100,
+#     cv=5,
+#     error_score='raise',
+#     n_jobs=-1,
+#     verbose=True, 
+#     scoring='accuracy'
+# )
+
+# opt.fit(X_train, y_train)
+
+
+# print("Best model: %s" % opt.best_estimator_)
+# print("val. score: %s" % opt.best_score_)
+# print("test score: %s" % opt.score(X_test, y_test))
+
+# %%
+# RF_model = RandomForestClassifier(n_estimators=10, random_state=random_state)
+# RF_model.fit(X_train, y_train)
+
+# RF_model.score(X_test, y_test)
+
+# %% [markdown]
+# # MLP
+
+# %%
+# # "MLP":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
+
+
+
+# opt = RandomizedSearchCV(
+#     MLPClassifier(),
+#     {
+#         'hidden_layer_sizes':[(128, 64), (256, 128)],
+#         'max_iter': [50, 100, 200, 500, 1000, 5000], # Default 200,
+#     },
+#     n_iter=12,
+#     cv=5,
+#     error_score='raise',
+#     n_jobs=-1,
+#     # verbose=True, 
+#     scoring='accuracy'
+# )
+
+# opt.fit(X_train, y_train)
+
+
+# print("Best model: %s" % opt.best_estimator_)
+# print("val. score: %s" % opt.best_score_)
+# print("test score: %s" % opt.score(X_test, y_test))
+
+# %%
+# MLP_model = MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state)
+# MLP_model.fit(X_train, y_train)
+
+# MLP_model.score(X_test, y_test)
+
+# %%
+
 
 # model = DecisionTreeClassifier(random_state=42)
 
@@ -757,6 +993,12 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # RS_DT = RandomizedSearchCV(estimator=model, param_distributions=params, cv=5, n_iter=300, n_jobs=-1, verbose=True, scoring='accuracy')
 
 # RS_DT.fit(X_train, y_train)
+
+# # print(X_train[0])
+# print("Dataset: ", base_dataset, df.shape)
+# print("Count of labels: ", df.groupby(['numeric_label'])['numeric_label'].value_counts())
+# print("Best Parameters:", RS_DT.best_params_,end='\n\n')
+# print("Best Score:", RS_DT.best_score_)
 
 
 # import xgboost as xgb
@@ -796,19 +1038,12 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 #                                                                         (Source: https://xgboost.readthedocs.io/en/release_0.82/parameter.html)
 
 # %%
-# print("Best Parameters:", RS_DT.best_params_,end='\n\n')
-# print("Best Score:", RS_DT.best_score_)
+
 
 # %% [markdown]
 # For cleveland dataset:
 # 
 # For Decision Tree, RandomizedSearchCV
-# 
-# with 5 classes: 0, 1, 2, 3, 4 
-# 
-# Best Parameters:  {'min_samples_split': 8, 'min_samples_leaf': 3, 'max_depth': 5, 'criterion': 'gini'}
-# 
-# Best Score: 1.0
 # 
 # 
 # With only two classes: 0 and (1,2,3,4)-->1
@@ -816,6 +1051,13 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # Best Parameters: {'min_samples_split': 8, 'min_samples_leaf': 15, 'max_depth': 3, 'criterion': 'gini'}
 # 
 # Best Score: 0.7441326530612244
+# 
+# 
+# with 5 classes: 0, 1, 2, 3, 4 
+# 
+# Best Parameters:  {'min_samples_split': 8, 'min_samples_leaf': 3, 'max_depth': 5, 'criterion': 'gini'}
+# 
+# Best Score: 1.0
 # 
 # Why is there such difference? Understand it. 
 
@@ -875,6 +1117,7 @@ def check_model_stmfr(df, name_df):
         # bst = XGBClassifier(n_estimators=2, max_depth=20, learning_rate=1, num_class=4, objective='multi:softmax')
         
         model = get_model(model_name)
+        
         # model = DecisionTreeClassifier(min_samples_split=16, min_samples_leaf=3, max_depth= 15, criterion= 'entropy')
         # model = XGBClassifier(num_class=4, objective='multi:softmax')  #, max_depth=4, learning_rate=0.117, subsample=0.82)
 
@@ -1396,14 +1639,21 @@ orig_tcga
 # # 1.2a label match with the origial labels for derived dataset 
 
 # %%
+
 if dataset == "HD":
     
     # match_labels['match'] = match_labels[match_labels['num'] == match_labels['numeric_label']]
     match_labels = pd.merge(orig_tcga, tcga_labelled_forward_expr, left_index=True, right_index=True)[['numeric_label_x','numeric_label_y']]
 
     match_labels['match'] = np.where(match_labels['numeric_label_x'] == match_labels['numeric_label_y'], 1, 0)
-    count_match = match_labels.groupby(['match'])['match'].value_counts()[1]
+    count_match = match_labels.groupby(['match'])['match'].value_counts()[1].item()
     perc_match = (count_match / len(match_labels)) 
+
+    if debug:
+        print("\n\n******************\n\n")
+        print(count_match)
+        print(perc_match)
+        print("\n\n******************\n\n")
     #perc_match
 
     # df['que'] = np.where((df['one'] >= df['two']) & (df['one'] <= df['three'])
@@ -1419,6 +1669,11 @@ elif dataset == "GE":
     add_to_final_results = {"s_no": '1.2a', 'description': 'label match with the origial labels for '+derived_dataset, 'value': np.nan}
 
 final_results.loc[len(final_results)] = add_to_final_results
+
+# %%
+a=pd.DataFrame(columns=['match'],data=[1, 2,1,2,1,3,4,1,2])
+
+a.groupby(['match'])['match'].value_counts()[1]
 
 # %% [markdown]
 # # Reverse Experiment
@@ -1612,9 +1867,15 @@ reverse_match_labels
 
 # %%
 reverse_match_labels['match'] = np.where(reverse_match_labels['numeric_label_x'] == reverse_match_labels['numeric_label_y'], 1, 0)
-count_match = reverse_match_labels.groupby(['match'])['match'].value_counts()[1]
+count_match = reverse_match_labels.groupby(['match'])['match'].value_counts()[1].item()
 perc_match = (count_match / len(reverse_match_labels)) 
 # perc_match
+
+if debug:
+        print("\n\n******************\n\n")
+        print(count_match)
+        print(perc_match)
+        print("\n\n******************\n\n")
 
 logger.info("\n\n1.8a: Reverse derived label %%age match with original labels for %s", base_dataset)
 logger.info("For reverse experiment, %% match of labels between derived %s and original %s dataset: %f!!!\n", base_dataset, base_dataset, perc_match)    
