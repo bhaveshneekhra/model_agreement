@@ -12,6 +12,9 @@
 # 
 # Write another script to combine these results model-wise- for each model there are 36 combinations of (n_model, ar)
 
+# %% [markdown]
+# # Import libraries
+
 # %%
 # import sklearn
 import pandas as pd
@@ -72,21 +75,35 @@ import logging
 
 # %%
 # dataset = "Heart-Disease"
-# dataset ="Gene-Expr"
+# dataset = "Gene-Expr"
+# dataset = "AutoImmune"
+
 debug = 0
+
+get_base_results = 1
+
+do_reverse_pass = 0
+
+get_extended_results = 0
 
 dataset ="HD"
 
-save_fig_path = "./"+dataset+"/"
+# dataset = "AI"
+# dataset_combo = "A_B"
 
-model_name = "DT"
+# For dataset = "Heart-Disease"
+dataset_combo = "SW_CL"  # Other combinations are CL_HG, CL_SW, CL_VA, HG_SW, HG_VA and so on
+
+model_name = "SVM"
 random_state = 42
-n_models = 3
-frac_agree = 1.0
+n_models = 100
+frac_agree = 0.5
 
 test_split_size = 0.2
 
-opt_model= 1
+opt_model= 0
+
+save_fig_path = "./Plots/"+dataset+"/"+dataset_combo+"/"+model_name+"/"  
 
 final_results = pd.DataFrame(columns=["s_no", "description","value"])
 
@@ -106,17 +123,17 @@ def parseArguments():
     parser.add_argument("-ar","--agreement_rate", help="Agreement rate among models", type=float)
     parser.add_argument("-dataset", help="Dataset to use (HD for heart disease, GE for gene expression)", type=str)
     parser.add_argument("-optm","--optimise_model", help="Whether to use default models or optimised models- 0: default 1: optimise", type=float)
-
+    parser.add_argument("-dc","--dataset_combo", help="Defines base dataset and to-be-labeled dataset, for example CL_HG / HG_CL", type=str)
     # Parse arguments
     args = parser.parse_args()
 
     return args
 
 if __name__ == '__main__':
-    if len(sys.argv) != 13:
+    if len(sys.argv) != 15:
         print(len(sys.argv))                                                                                                       
-        print("usage: ", sys.argv[0], "[-h] [-sfg SAVE_FIG_PATH] [-m MODEL_NAME] [-n NO_OF_MODELS] [-ar AGREEMENT_RATE] [-dataset DATASET] [-optm Whether to optimise model]")  
-        sys.exit()                                                                                                         
+        print("usage: ", sys.argv[0], "[-h] [-sfg SAVE_FIG_PATH] [-m MODEL_NAME] [-n NO_OF_MODELS] [-ar AGREEMENT_RATE] [-dataset DATASET] [-optm Whether to optimise model] [-dc DATASET COMBINATION]")  
+        raise SystemExit("Not enough arguments passed!")
     # Parse the arguments
     args = parseArguments()
     save_fig_path = args.__dict__['save_fig_path']
@@ -125,8 +142,8 @@ if __name__ == '__main__':
     frac_agree = args.__dict__['agreement_rate']
     dataset = args.__dict__['dataset']        
     opt_model = args.__dict__['optimise_model']        
-
-    save_fig_path = "./"+dataset+"/"+model_name+"/"  
+    dataset_combo = args.__dict__['dataset_combo']
+    save_fig_path = "./Plots/"+dataset+"/"+dataset_combo+"/"+model_name+"/"  
 
 
 # %%
@@ -152,6 +169,11 @@ if __name__ == '__main__':
 # (1) HD for Heart-Disease
 # 
 # (2) GE for Gene-Expr
+# 
+# (3) AI for Auto-immune Disease
+
+# %%
+dataset_combo.split("_")[0], dataset_combo.split("_")[1]
 
 # %%
 if dataset == "GE":
@@ -176,23 +198,89 @@ if dataset == "GE":
 
 elif dataset == "HD":
 
-    base_dataset = "Cleveland"
-    derived_dataset = "Hungary"
+    # Set the base dataset
+    # if dataset_combo.split("_")[0] == 
+    base_dataset_name = dataset_combo.split("_")[0]
+    derived_dataset_name =  dataset_combo.split("_")[1]
+
+
+    match base_dataset_name:
+        case 'CL':
+            base_dataset = "Cleveland"
+            base_file_path = './UCI_cleveland.csv'
+
+        case 'HG':
+            base_dataset = "Hungary"
+            base_file_path = './UCI_hungary.csv'
+
+        case 'SW':
+            base_dataset = "Switzerland"
+            base_file_path = './UCI_switzerland.csv'
+
+        case 'VA':
+            base_dataset = "Long Beach VA"
+            base_file_path = './UCI_longbeach_va.csv'
+        case _:
+            raise SystemExit("Valid name of base dataset is not provided")
+    
+
+
+    match derived_dataset_name:
+        case 'CL':
+            derived_dataset = "Cleveland"
+            to_be_labelled_file_path = './UCI_cleveland.csv'
+
+        case 'HG':
+            derived_dataset = "Hungary"
+            to_be_labelled_file_path = './UCI_hungary.csv'
+
+        case 'SW':
+            derived_dataset = "Switzerland"
+            to_be_labelled_file_path = './UCI_switzerland.csv'
+            
+        case 'VA':
+            derived_dataset = "Long Beach VA"
+            to_be_labelled_file_path = './UCI_longbeach_va.csv'
+
+
+        case _:
+            raise SystemExit("Valid name of derived dataset is not provided")
+            
+
 
     # #On bhavesh local machine
-    base_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_processed_cleveland.csv"
-    to_be_labelled_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_preprocessed_hungary.csv"
+    # base_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_processed_cleveland.csv"
+    # to_be_labelled_file_path = "/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/Dataset/Heart_Disease_UCI_1988/UCI_preprocessed_hungary.csv"
     
     
     # #On lab machine
     # base_file_path = './UCI_cleveland.csv'
     # to_be_labelled_file_path = './UCI_hungary.csv'
 
+elif dataset == "AI":
+
+    # Set the base dataset
+    # if dataset_combo.split("_")[0] == 
+    base_dataset_name = dataset_combo.split("_")[0]
+    derived_dataset_name =  dataset_combo.split("_")[1]
+
+    match base_dataset_name:
+        case 'A':
+            base_dataset = "Set A"
+            base_file_path = './imm_set_A.csv'
+
+    match derived_dataset_name:
+        case 'B':
+            derived_dataset = "Set B"
+            to_be_labelled_file_path = './imm_set_B.csv'
 
 else:
-    print("Name of the dataset is not valid!")
+    raise SystemExit("Valid name of dataset not provided")
 
 
+
+# %%
+base_dataset, derived_dataset
 
 # %%
 # # Check whether the specified path exists or not
@@ -201,19 +289,20 @@ if not isExist:
 
    # Create a new directory because it does not exist
    os.makedirs(save_fig_path)
-   print("The new directory ", save_fig_path, "is created!")
+   print("The new directory for saving the plots: ", save_fig_path, "is created!")
 
-final_results_save_path = "./Final_Results/"+dataset+"/"+model_name+"/"
+final_results_save_path = "./Final_Results/"+dataset+"/"+dataset_combo+"/"+model_name+"/"
+
 
 isExist = os.path.exists(final_results_save_path)
 if not isExist:
 
    # Create a new directory because it does not exist
    os.makedirs(final_results_save_path)
-   print("The new directory ", final_results_save_path, "is created!")
+   print("The new directory for saving the final results:", final_results_save_path, "is created!")
 
 # %%
-final_results_save_path
+final_results_save_path, save_fig_path
 
 # %%
 # from pathlib import Path
@@ -264,22 +353,36 @@ prog_start = timer()
 # Heart Disease dataset for Cleveland (Similar use case as STMFR)
 
 orig_df = pd.read_csv(base_file_path)
-df = orig_df
+
+df = orig_df.copy()
 
 # %%
 # Heart Disease dataset for Hungary (Similar use case as TCGA)
 
 orig_tcga = pd.read_csv(to_be_labelled_file_path)
-tcga = orig_tcga
+
+tcga = orig_tcga.copy()
 
 # %%
-orig_tcga.columns
+df.columns, tcga.columns 
+
+# %%
+try:
+    print(df.numeric_label.value_counts(), tcga.numeric_label.value_counts())
+except: 
+    pass
 
 # %%
 # Derived dataset is labelled only for heart disease dataset not for gene expression dataset
 
 if dataset == "HD":
+    orig_df.rename(columns={"diagnosis": "numeric_label"}, errors="raise",inplace=True)
+    df.rename(columns={"diagnosis": "numeric_label"}, errors="raise",inplace=True)
     orig_tcga.rename(columns={"diagnosis": "numeric_label"}, errors="raise",inplace=True)
+    tcga.rename(columns={"diagnosis": "numeric_label"}, errors="raise",inplace=True)
+# elif dataset == "AI":
+    # df.rename(columns={"Condition": "numeric_label"}, errors="raise",inplace=True)
+    # orig_tcga.rename(columns={"Condition": "numeric_label"}, errors="raise",inplace=True)
 else:
     pass
 
@@ -318,6 +421,19 @@ elif dataset == "HD":
     tcga = tcga.set_index('Unnamed: 0')
     tcga = tcga.rename_axis(index=None)
 
+elif dataset == "AI":
+    df = df.set_index('Unnamed: 0')
+    df = df.rename_axis(index=None)
+
+    orig_df = orig_df.set_index('Unnamed: 0')
+    orig_df = orig_df.rename_axis(index=None)
+    
+    tcga = tcga.set_index('Unnamed: 0')
+    tcga = tcga.rename_axis(index=None)
+
+    orig_tcga = orig_tcga.set_index('Unnamed: 0')
+    orig_tcga = orig_tcga.rename_axis(index=None)
+
 # %%
 tcga
 
@@ -330,7 +446,10 @@ tcga.columns
 # print(tcga.isnull().sum().sort_values(ascending=False))
 
 # %%
-df.columns, df.shape
+df.numeric_label.value_counts()
+
+# %%
+df.columns, df.shape, orig_df.columns
 
 # %%
 # The following modification is for TCGA dataset
@@ -349,6 +468,20 @@ elif dataset == "HD":
     tcga = tcga[['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
        'thalch', 'exang', 'oldpeak']]
 
+elif dataset == "AI":
+    # Select 12 random features
+    df = orig_df.sample(n=12,axis='columns')
+    # df.shape
+
+    df['numeric_label'] = orig_df['numeric_label']
+
+    df.insert(len(df.columns)-1, 'numeric_label', df.pop('numeric_label'))
+
+    cols = df.columns.tolist()
+    cols_ = cols[:-1]
+
+    tcga = tcga[cols_]
+
 # %%
 df.shape, tcga.shape
 
@@ -359,7 +492,7 @@ else:
     pass
 
 # %%
-df
+df.numeric_label.value_counts()
 
 # %% [markdown]
 # # If using Cleveland dataset from UCI, no need to encode the labels 
@@ -374,11 +507,19 @@ if dataset == "GE":
 
 # For cleveland dataset, use the following
 elif dataset == "HD":
-    df['numeric_label'] = df['diagnosis']
-    df.drop('diagnosis', axis=1, inplace=True)
+    try:
+        df['numeric_label'] = df['diagnosis']
+        df.drop('diagnosis', axis=1, inplace=True)
+    except:
+        pass
 
-
-
+elif dataset == "AI":
+    label_encoder = LabelEncoder()
+    df['numeric_label'] = label_encoder.fit_transform(df.numeric_label)
+    orig_df['numeric_label'] = label_encoder.fit_transform(orig_df.numeric_label)
+    orig_tcga['numeric_label'] = label_encoder.fit_transform(orig_tcga.numeric_label)
+    
+    
 
 # For clevland dataset in df
 # Encode the categorical columns: sex, cp, fbs, restecg, exang: For the same columns in hungarian dataset, same encoder should be used or independent? I think it should be same encoder. Verify. 
@@ -413,6 +554,13 @@ elif dataset == "HD":
 # logging.info("For exang: ")
 # logging.info(label_encoder.classes_)
 # Resulting encoding: 0--> False, 1-->True
+
+# %%
+try:
+    print(label_encoder.classes_)
+except:
+    pass
+
 
 # %%
 # Both dataframes should have same column order 
@@ -459,7 +607,7 @@ df.columns, tcga.columns
 # Resulting encoding: 0--> False, 1-->True
 
 # %%
-df.groupby(['numeric_label'])['numeric_label'].value_counts()
+# tcga
 
 # %%
 # Update the numeric_label as following for UCI health disease dataset
@@ -470,13 +618,17 @@ if dataset == "HD":
     df.loc[df["numeric_label"] == 4, "numeric_label"] = 1
 
 
+
 # %%
 # tcga
 
 # %%
 logging.info("Class wise distribution in original dataset %s: ", base_dataset)
 logging.info(df['numeric_label'].value_counts())
-
+try:
+    logging.info("The class encoding is: %s",label_encoder.classes_)
+except:
+    pass
 # Commented for heart disease dataset
 # logging.info(label_encoder.classes_)
 
@@ -485,6 +637,7 @@ logging.info(df['numeric_label'].value_counts())
 
 # %%
 def get_model(model_name):
+
   if dataset == "GE":
 
     model_dict = {
@@ -512,7 +665,8 @@ def get_model(model_name):
           "XGBoost": XGBClassifier(num_class=4, objective='multi:softmax', random_state=random_state),
           "XGB": XGBClassifier(num_class=4, objective='multi:softmax', random_state=random_state)
           }
-  elif dataset == "HD" and not(opt_model):
+    
+  elif (dataset == "HD" or dataset == "AI") and not(opt_model):
             # Use default models if opt_model = 0 
     model_dict = {
           # 'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
@@ -585,6 +739,9 @@ def get_model(model_name):
   else:
     model = model_dict[model_name]
     return model
+
+# %%
+model_name
 
 # %%
 # plt.rcParams.update({'font.size': 8})
@@ -778,10 +935,7 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # print(hyperopt.pyll.stochastic.sample(space))
 
 # %% [markdown]
-# # hyperparameter selection
-
-# %% [markdown]
-# # 
+# # Hyperparameter selection
 
 # %%
 # train, test = train_test_split(df, test_size=test_split_size, random_state=random_state, shuffle=True)
@@ -790,14 +944,14 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # X_test, y_test = test.iloc[:, :-1], test['numeric_label']
 
 # %% [markdown]
-# # LR
+# #LR
 
 # %%
 # # LR
 
 # model = LogisticRegression(n_jobs=-1, random_state=random_state)
 
-# # model = LogisticRegression(class_weight='balanced', max_iter=500, random_state=42)
+# # # model = LogisticRegression(class_weight='balanced', max_iter=500, random_state=42)
 
 # model.fit(X_train, y_train)
 # logger.info("Default model LR's performance: ")
@@ -841,7 +995,7 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # print(report_before)
 
 # %% [markdown]
-# # SVM
+# #SVM
 
 # %%
 # # log-uniform: understand as search over p = exp(x) by varying x
@@ -877,7 +1031,7 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # LinearSVC(dual=False, max_iter=100)
 
 # %% [markdown]
-# # DT
+# #DT
 
 # %%
 # # DecisionTreeClassifier(min_samples_split = 8, min_samples_leaf = 15, max_depth = 3, criterion = 'gini',random_state=random_state)
@@ -913,7 +1067,7 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # DT_model.score(X_test, y_test)
 
 # %% [markdown]
-# # RF 
+# #RF 
 
 # %%
 # # RandomForestClassifier(n_estimators=10, random_state=random_state),
@@ -947,7 +1101,7 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 # RF_model.score(X_test, y_test)
 
 # %% [markdown]
-# # MLP
+# #MLP
 
 # %%
 # # "MLP":MLPClassifier(hidden_layer_sizes=[256, 128], batch_size=32, random_state=random_state),
@@ -1036,9 +1190,6 @@ def merge_samples_tcga_stmfr(samples_index, stmfr_df, tcga_df):
 #                                                             
 #                                                             default: eta [default=0.3, alias: learning_rate], max_depth [default=6], subsample [default=1] 
 #                                                                         (Source: https://xgboost.readthedocs.io/en/release_0.82/parameter.html)
-
-# %%
-
 
 # %% [markdown]
 # For cleveland dataset:
@@ -1232,19 +1383,18 @@ def check_model_stmfr(df, name_df):
 # # 1.1 Train-test on base dataset
 
 # %%
-check_model_stmfr(df, base_dataset)
+if get_base_results:
 
-# %%
-logger.info("1.1: Train-test on %s (%s): ", base_dataset, df.shape)
-avg_acc = check_model_stmfr(df, base_dataset)
+    logger.info("1.1: Train-test on %s (%s): ", base_dataset, df.shape)
+    avg_acc = check_model_stmfr(df, base_dataset)
 
-# "s_no.", "description","value"
+    # "s_no.", "description","value"
 
-add_to_final_results = {"s_no": '1.1', 'description': 'Train-test on '+base_dataset, 'value': avg_acc}
+    add_to_final_results = {"s_no": '1.1', 'description': 'Train-test on '+base_dataset+" (n="+str(len(df))+")", 'value': avg_acc}
 
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
-final_results.loc[len(final_results)] = add_to_final_results
+    final_results.loc[len(final_results)] = add_to_final_results
 
 
 # %% [markdown]
@@ -1253,9 +1403,11 @@ final_results.loc[len(final_results)] = add_to_final_results
 
 # %%
 # orig_tcga.columns
-
-orig_tcga = orig_tcga.set_index('Unnamed: 0')
-orig_tcga = orig_tcga.rename_axis(index=None)
+try:
+    orig_tcga = orig_tcga.set_index('Unnamed: 0')
+    orig_tcga = orig_tcga.rename_axis(index=None)
+except:
+    pass
 
 # %%
 orig_tcga
@@ -1267,6 +1419,12 @@ orig_tcga
 # %%
 if dataset == "HD":
     tcga['numeric_label'] = orig_tcga['numeric_label']
+
+    tcga.loc[tcga["numeric_label"] == 2, "numeric_label"] = 1
+    tcga.loc[tcga["numeric_label"] == 3, "numeric_label"] = 1
+    tcga.loc[tcga["numeric_label"] == 4, "numeric_label"] = 1
+elif dataset == "AI":
+    tcga['numeric_label'] = orig_tcga['numeric_label']
 else:
     pass
 
@@ -1274,24 +1432,27 @@ else:
 tcga
 
 # %%
-if dataset == "HD":
-
-    logger.info("1.1a: Train-test on %s (%s): ", derived_dataset, tcga.shape)
-    avg_acc = check_model_stmfr(tcga, derived_dataset)
-
-    # "s_no.", "description","value"
-
-    add_to_final_results = {"s_no": '1.1a', 'description': 'Train-test on '+derived_dataset, 'value': avg_acc}
-
-    tcga.drop('numeric_label', axis=1, inplace=True)
-    tcga.shape
-elif dataset == "GE":
-    add_to_final_results = {"s_no": '1.1a', 'description': 'Train-test on '+derived_dataset, 'value': np.nan}
-
-final_results.loc[len(final_results)] = add_to_final_results
+# 'Train-test on '+derived_dataset+" (n="+str(len(tcga))+")"
 
 # %%
-final_results
+if get_base_results:
+
+    if dataset == "HD" or dataset == "AI":
+
+        logger.info("1.1a: Train-test on %s (%s): ", derived_dataset, tcga.shape)
+        avg_acc = check_model_stmfr(tcga, derived_dataset)
+
+        # "s_no.", "description","value"
+
+        add_to_final_results = {"s_no": '1.1a', 'description': 'Train-test on '+derived_dataset+" (n="+str(len(tcga))+")", 'value': avg_acc}
+        
+    elif dataset == "GE":
+        add_to_final_results = {"s_no": '1.1a', 'description': 'Train-test on '+derived_dataset+" (n="+str(len(tcga))+")", 'value': np.nan}
+
+    final_results.loc[len(final_results)] = add_to_final_results
+
+# There should not by any target column in to-be-labelled dataset while predicting
+tcga.drop('numeric_label', axis=1, inplace=True)
 
 # %% [markdown]
 # Default DT on STMFR
@@ -1318,6 +1479,28 @@ final_results
 # %% [markdown]
 # # main function
 # 
+
+# %%
+# Set filter for the derived dataframe
+match dataset:
+    case 'HD':
+        match derived_dataset_name:
+                case 'CL':
+                        match_for = "Cleveland"
+                case 'HG':
+                        match_for = "Hungary"
+                case 'SW':
+                        match_for = "Switzerland"
+                case 'VA':
+                        match_for = "LongBeachVA"        
+                    # sys.exit()
+    case 'GE':
+            match_for = "TCGA"
+    case 'AI':
+        df = df.set_index("Set_A_"+df.index)
+        tcga = tcga.set_index("Set_B_"+tcga.index)
+        orig_tcga = orig_tcga.set_index("Set_B_"+orig_tcga.index)
+        match_for = "Set_B"
 
 # %%
 def prediction_agreement_models(stmfr_df, tcga_df, held_out_data = "", n_models = 100, frac_agree = 1, pca = False, pca_n_components = 100):
@@ -1451,6 +1634,7 @@ def prediction_agreement_models(stmfr_df, tcga_df, held_out_data = "", n_models 
 # # Forward Pass
 
 # %%
+round = 1
 start = timer()
 
 logger.info("for model: ")
@@ -1463,16 +1647,10 @@ combined_train_stmfr_tcga, selected_tcga_samples_test, ood_tcga_samples = predic
 logger.info("Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: "+
                 str(len(combined_train_stmfr_tcga))+" "+str(len(selected_tcga_samples_test))+" "+str(len(ood_tcga_samples)))
     
-    # For TCGA dataset
-if dataset == "GE":
-    tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like='TCGA', axis=0)
-
-    # For hungarian dataset
-elif dataset == "HD":
-    tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like='Hungary', axis=0)
+tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like=match_for, axis=0)
 
 # tcga_curr_round_combined = pd.concat([tcga_curr_round_labelled, selected_tcga_samples_test])
-logger.info("Labels Distribution in current round:")           
+logger.info("Labels Distribution in current round for %s:", match_for)           
 logger.info(tcga_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
 
 curr_round_added_samples_count = len(combined_train_stmfr_tcga) - len(df)    
@@ -1480,14 +1658,11 @@ logger.info("Round 1 ends. Added %d samples.", curr_round_added_samples_count)
 
 end = timer()
 
-exec_time = end-start
+exec_time_round_1 = end-start
 # print(exec_time)
 
-logger.info("Forward Pass: Round 1 took %s time.", exec_time)
+logger.info("Forward Pass: Round 1 took %s time.", exec_time_round_1)
 
-
-# %%
-tcga_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count()
 
 # %% [markdown]
 # 2m 57.8s, 3 models, 100 PCA
@@ -1502,16 +1677,18 @@ if dataset == "HD":
     stop_at = 0.02
 elif dataset == "GE":
     stop_at = 0.05
-
+elif dataset == "AI":
+    stop_at = 0.05
+    
 
 start = timer()
-round = 2
 
-if curr_round_added_samples_count == len(tcga):
-    # If all the samples in the derived datasets are labelled then no need for further rounds
+
+if curr_round_added_samples_count >= stop_at*len(tcga):
+    # If most of the samples (> 95%) in the derived datasets are labelled then no need for further rounds
     pass
 else:
-
+    round = 2
     while True:
         try:
             if curr_round_added_samples_count >= stop_at*len(tcga):
@@ -1535,17 +1712,17 @@ else:
 
                 # For TCGA dataset
                 if dataset == "GE":
-                    tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like='TCGA', axis=0)
+                    tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like=match_for, axis=0)
 
                 # For hungarian dataset
                 elif dataset == "HD":
-                    tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like='Hungary', axis=0)
+                    tcga_curr_round_labelled = combined_train_stmfr_tcga.filter(like=match_for, axis=0)
                 
 
                 # tcga_curr_round_combined = pd.concat([tcga_curr_round_labelled, selected_tcga_samples_test])    
                 # logger.info("Samples labelled in the current round %s", tcga_curr_round_labelled.shape)    
                 if(curr_round_added_samples_count!=0):
-                    logger.info("Labels Distribution in current round:")   
+                    logger.info("Labels Distribution in current round for %s: ", match_for)   
                     logger.info(tcga_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
                     
                     logger.info("\nRound "+str(round)+" ends.\n\n") 
@@ -1560,7 +1737,8 @@ else:
                     
                 #     break
             else:
-                logger.info("STOPPING: No of samples added in the current round, %d, is less than %.2f fraction of the original.", curr_round_added_samples_count, stop_at)
+                logger.info("STOPPING: No of samples added (in the current round), %d, is less than %.2f fraction of the original.", curr_round_added_samples_count, stop_at)
+                logger.info("Forward experiment ended in %d rounds!!!\n", round-1)    
                 break
         except Exception as e:
             #Handle the exception
@@ -1568,17 +1746,20 @@ else:
             logger.warning(e) #
             break
         
-logger.info("Forward experiment ended in %d rounds!!!\n", round-1)    
+# logger.info("Forward experiment ended in %d rounds!!!\n", round-1)    
 
 # For hungarian dataset
-tcga_labelled_forward_expr = combined_train_stmfr_tcga.filter(like='Hungary', axis=0)
-logger.info("Total samples for which labelling is done in forward pass %s", tcga_labelled_forward_expr.shape)
+tcga_labelled_forward_expr = combined_train_stmfr_tcga.filter(like=match_for, axis=0)
+logger.info("Total samples for which labelling is done in forward pass for %s: %s", match_for, tcga_labelled_forward_expr.shape)
 
 end = timer()
 
 exec_time = end-start
 # print(exec_time)
-logger.info("Forward Pass: Round 2 till %d took %s time.", round-1, exec_time)
+logger.info("Forward Pass took %s time.", exec_time+exec_time_round_1)
+
+# %%
+combined_train_stmfr_tcga
 
 # %%
 len(combined_train_stmfr_tcga), len(selected_tcga_samples_test), len(ood_tcga_samples)
@@ -1594,13 +1775,8 @@ tcga_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count()
 
 # Saving the labelled TCGA took ~ 1m 32.4s 
 
-# For TCGA dataset
-if dataset == "GE":
-    tcga_labelled_forward_expr = combined_train_stmfr_tcga.filter(like='TCGA', axis=0)
-
-# For hungarian dataset
-elif dataset == "HD":
-    tcga_labelled_forward_expr = combined_train_stmfr_tcga.filter(like='Hungary', axis=0)
+            
+tcga_labelled_forward_expr = combined_train_stmfr_tcga.filter(like=match_for, axis=0)
 
 # tcga_curr_round_combined = pd.concat([tcga_curr_round_labelled, selected_tcga_samples_test])
     
@@ -1608,46 +1784,55 @@ elif dataset == "HD":
 # tcga_curr_round_combined.to_csv(fname)
 
 # %%
+tcga_labelled_forward_expr.numeric_label.value_counts()
+
+# %%
 # str((tcga_labelled_forward_expr.shape)[0])
 
 # %%
-logger.info("1.2: Train-test on derived %s (%s): ", derived_dataset, tcga_labelled_forward_expr.shape)
-avg_acc = check_model_stmfr(tcga_labelled_forward_expr, "Derived_dataset")
+logger.info("Class-wise distribution for derived dataset: %s", tcga_labelled_forward_expr.numeric_label.value_counts())
+try:
+    avg_acc = check_model_stmfr(tcga_labelled_forward_expr, "Derived dataset")
+except:
+    avg_acc = np.nan
+
+logger.info("1.2: Train-test on derived %s (%s): %s", derived_dataset, tcga_labelled_forward_expr.shape, avg_acc)
+# logger.info("5-fold cross validation accuracy (%s): ", avg_acc)
 
 add_to_final_results = {"s_no": '1.2', 'description': 'Train-test on derived '+derived_dataset+" "+str((tcga_labelled_forward_expr.shape)[0]), 'value': avg_acc}
 # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
 final_results.loc[len(final_results)] = add_to_final_results
 
+# %%
+final_results
+
 # %% [markdown]
-# # 1.2a: label %age match with the origial labels for base dataset 
-
-# %%
-tcga
-
-# %%
-tcga_labelled_forward_expr
-
-# How to compare these with acutal labels
-# Preserve sample ids if there
-# I think they are there- need to preserve them so that these derived labels can be compared with the original labels 
+# # 1.2a label %age match with the original labels for derived dataset 
 
 # %%
 orig_tcga
 
-# %% [markdown]
-# # 1.2a label match with the origial labels for derived dataset 
+# %%
+tcga_labelled_forward_expr
+
+# %%
+# match_label
 
 # %%
 
-if dataset == "HD":
+if dataset == "HD" or dataset == "AI":
     
     # match_labels['match'] = match_labels[match_labels['num'] == match_labels['numeric_label']]
     match_labels = pd.merge(orig_tcga, tcga_labelled_forward_expr, left_index=True, right_index=True)[['numeric_label_x','numeric_label_y']]
-
-    match_labels['match'] = np.where(match_labels['numeric_label_x'] == match_labels['numeric_label_y'], 1, 0)
-    count_match = match_labels.groupby(['match'])['match'].value_counts()[1].item()
-    perc_match = (count_match / len(match_labels)) 
+    
+    if(len(match_labels) ==0):
+        count_match = 0
+        perc_match = 0
+    else:
+        match_labels['match'] = np.where(match_labels['numeric_label_x'] == match_labels['numeric_label_y'], 1, 0)
+        count_match = match_labels.groupby(['match'])['match'].value_counts()[1].item()
+        perc_match = (count_match / len(match_labels)) 
 
     if debug:
         print("\n\n******************\n\n")
@@ -1660,7 +1845,7 @@ if dataset == "HD":
     #                      , df['one'], np.nan)
 
     logger.info("1.2a: label %%age match with the origial labels for %s dataset", derived_dataset)
-    logger.info("For forward experiment, %% of match for derived %s and original %s dataset: %f!!!\n", derived_dataset, derived_dataset, perc_match)    
+    logger.info("For forward experiment, %d labels (%f) matched between derived %s and original %s dataset!!!\n", count_match, perc_match, derived_dataset, derived_dataset)    
 
     add_to_final_results = {"s_no": '1.2a', 'description': 'label match with the origial labels for '+derived_dataset, 'value': perc_match}
 
@@ -1671,9 +1856,12 @@ elif dataset == "GE":
 final_results.loc[len(final_results)] = add_to_final_results
 
 # %%
-a=pd.DataFrame(columns=['match'],data=[1, 2,1,2,1,3,4,1,2])
+perc_match
 
-a.groupby(['match'])['match'].value_counts()[1]
+# %%
+# a=pd.DataFrame(columns=['match'],data=[1, 2,1,2,1,3,4,1,2])
+
+# a.groupby(['match'])['match'].value_counts()[1]
 
 # %% [markdown]
 # # Reverse Experiment
@@ -1683,130 +1871,139 @@ a.groupby(['match'])['match'].value_counts()[1]
 # (2) Using derived hungarian dataset to label cleveland dataset 
 
 # %%
-# Took 18.9s to read from local 
+if do_reverse_pass:
 
-# tcga_labeled_df = pd.read_csv("/Users/bhavesh/Documents/AU/PhD/model_agreement_expr/gitrepo/model_agreement/XGB_TCGA_labelled_Dec23.csv")
+    tcga_labeled_df = tcga_labelled_forward_expr
 
-tcga_labeled_df = tcga_labelled_forward_expr
+    stmfr_unlabelled_df = df.iloc[:, :-1]
 
-# %%
-logger.info("\n\nSetting up Reverse pass:\n")
-logger.info("Labelled %s: shape %s", derived_dataset, tcga_labeled_df.shape)
-# logger.info(tcga_labeled_df.shape)
-# logger.info("")
+    logger.info("\n\nSetting up Reverse pass:\n")
+    logger.info("Labelled %s: shape %s", derived_dataset, tcga_labeled_df.shape)
 
-# %%
-tcga_labeled_df
+    # Set filter for the derived dataframe
+    match dataset:
+        case 'HD':
+            match base_dataset_name:
+                    case 'CL':
+                            reverse_match_for = "Cleveland"
+                    case 'HG':
+                            reverse_match_for = "Hungary"
+                        # sys.exit()
+        case 'GE':
+                reverse_match_for = "STMFR"
+        case 'AI':
+                reverse_match_for = "Set_A"
 
-# %%
-# tcga_labeled_df.set_index(tcga_labeled_df['Unnamed: 0'], inplace=True)
-# tcga_labeled_df.drop('Unnamed: 0', axis=1, inplace=True)
-
-# %%
-stmfr_unlabelled_df = df.iloc[:, :-1]
-
-# %%
-stmfr_unlabelled_df.shape
-
-# %%
-logger.info("\n Reverse experiment: \n\n")
-logger.info("Using derived %s to label %s", derived_dataset, base_dataset)
-
-logger.info("\n Round 1 begins")
-combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr = prediction_agreement_models(tcga_labeled_df, stmfr_unlabelled_df, "", n_models=n_models, frac_agree=frac_agree)
-
-logger.info("Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: "+
-                str(len(combined_train_stmfr_tcga))+" "+str(len(selected_stmfr_test))+" "+str(len(ood_stmfr)))
-
-
-# For STMFR dataset 
-if dataset == "GE":
-    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!TCGA).)*$', axis=0)
-
-# For cleveland dataset
-elif dataset == "HD":
-    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like='Cleveland', axis=0)
-
-# stmfr_curr_round_combined = pd.concat([stmfr_curr_round_labelled, selected_stmfr_test])        
-
-logger.info(stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
-
-curr_round_added_samples_count = len(combined_train_stmfr_tcga) - len(tcga_labeled_df)    
-
-logger.info("\n Round 1 ends. Added %d samples", curr_round_added_samples_count)
+# %% [markdown]
+# Example code to illustrate use of regex in the next cell under GE
 
 # %%
-round = 2
+# import re
 
-if dataset == "HD":
-    stop_at = 0.02
-elif dataset == "GE":
-    stop_at = 0.05
+# regex = '^((?!'+match_for+').)*$'
 
+# test = "sdfasdfCleveffasfasfa"
 
-if curr_round_added_samples_count==len(stmfr_unlabelled_df):
-    pass
-else:
+# print(re.match(regex, test))
 
-    while True:
-        try:
-            if curr_round_added_samples_count >= stop_at*len(stmfr_unlabelled_df):
-                logger.info("\nRound "+str(round)+" starts:")   
-                logger.info("\nLength of combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr: "+
+# %%
+if do_reverse_pass:
+
+    logger.info("\n Reverse experiment: \n\n")
+    logger.info("Using derived %s to label %s", derived_dataset, base_dataset)
+
+    logger.info("\n Round 1 begins")
+    combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr = prediction_agreement_models(tcga_labeled_df, stmfr_unlabelled_df, "", n_models=n_models, frac_agree=frac_agree)
+
+    logger.info("Length of combined_train_stmfr_tcga, selected_tcga_test, ood_tcga: "+
                     str(len(combined_train_stmfr_tcga))+" "+str(len(selected_stmfr_test))+" "+str(len(ood_stmfr)))
-                
-                prev_round_combined_samples_count = len(combined_train_stmfr_tcga)
-
-                #Function call 
-                combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr = prediction_agreement_models(
-                    combined_train_stmfr_tcga, ood_stmfr, selected_stmfr_test, n_models=n_models, frac_agree=frac_agree)
-                
-                logger.info("\nRound "+str(round)+" details:\n\n")   
-                logger.info("\nLength of combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr: "+
-                    str(len(combined_train_stmfr_tcga))+" "+str(len(selected_stmfr_test))+" "+str(len(ood_stmfr)))
-                
-                curr_round_combined_samples_count = len(combined_train_stmfr_tcga)
-
-                curr_round_added_samples_count = curr_round_combined_samples_count - prev_round_combined_samples_count
 
 
-                # For STMFR dataset 
-                if dataset == "GE":
-                    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!TCGA).)*$', axis=0)
+    # For STMFR dataset 
+    if dataset == "GE":
+        stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!'+reverse_match_for+').)*$', axis=0)
 
-                # For cleveland dataset
-                elif dataset == "HD":
-                    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like='Cleveland', axis=0)
+    # For cleveland dataset
+    elif dataset == "HD" or dataset == "AI":
+        stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like=reverse_match_for, axis=0)
 
-                # stmfr_curr_round_combined = pd.concat([stmfr_curr_round_labelled, selected_stmfr_test])     
-                if(curr_round_added_samples_count!=0):    
-                    logger.info("Labels Distribution in current round:")   
-                    logger.info(stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
-                    logger.info("Round "+str(round)+" ends.")
+    # stmfr_curr_round_combined = pd.concat([stmfr_curr_round_labelled, selected_stmfr_test])        
+
+    logger.info(stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
+
+    curr_round_added_samples_count = len(combined_train_stmfr_tcga) - len(tcga_labeled_df)    
+
+    logger.info("\n Round 1 ends. Added %d samples for %s", curr_round_added_samples_count, reverse_match_for)
+
+# %%
+if do_reverse_pass:
+    round = 2
+
+    if dataset == "HD":
+        stop_at = 0.02
+    elif dataset == "GE" or dataset == "AI":
+        stop_at = 0.05
+
+
+    if curr_round_added_samples_count==len(stmfr_unlabelled_df):
+        pass
+    else:
+
+        while True:
+            try:
+                if curr_round_added_samples_count >= stop_at*len(stmfr_unlabelled_df):
+                    logger.info("\nRound "+str(round)+" starts:")   
+                    logger.info("\nLength of combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr: "+
+                        str(len(combined_train_stmfr_tcga))+" "+str(len(selected_stmfr_test))+" "+str(len(ood_stmfr)))
+                    
+                    prev_round_combined_samples_count = len(combined_train_stmfr_tcga)
+
+                    #Function call 
+                    combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr = prediction_agreement_models(
+                        combined_train_stmfr_tcga, ood_stmfr, selected_stmfr_test, n_models=n_models, frac_agree=frac_agree)
+                    
+                    logger.info("\nRound "+str(round)+" details:\n\n")   
+                    logger.info("\nLength of combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr: "+
+                        str(len(combined_train_stmfr_tcga))+" "+str(len(selected_stmfr_test))+" "+str(len(ood_stmfr)))
+                    
+                    curr_round_combined_samples_count = len(combined_train_stmfr_tcga)
+
+                    curr_round_added_samples_count = curr_round_combined_samples_count - prev_round_combined_samples_count
+
+
+                    # For STMFR dataset 
+                    if dataset == "GE":
+                        stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!'+reverse_match_for+').)*$', axis=0)
+
+                    # For cleveland dataset
+                    elif dataset == "HD":
+                        stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like=reverse_match_for, axis=0)
+
+                    # stmfr_curr_round_combined = pd.concat([stmfr_curr_round_labelled, selected_stmfr_test])     
+                    if(curr_round_added_samples_count!=0):    
+                        logger.info("Labels Distribution in current round for %s:", reverse_match_for)   
+                        logger.info(stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
+                        logger.info("Round "+str(round)+" ends.")
+                    else:
+                        logger("No new samples are labeled in the current round %d for %s", round, reverse_match_for)    
+                        logger.info("\nRound "+str(round)+" ends.\n\n")     
+                        break
+                    round = round + 1
+                    # if len(selected_stmfr_test)*4 <= 100:
+                    #     logger.info("No of selected STMFR samples for next round is less than 100")
+                    #     break
                 else:
-                    logger("No new samples are labeled in the current round %d", round)    
-                    logger.info("\nRound "+str(round)+" ends.\n\n")     
+                    logger.info("STOPPING: No of samples added in the current round, %d, is less than %.2f fraction of the original.",curr_round_added_samples_count, stop_at)
                     break
-                round = round + 1
-                # if len(selected_stmfr_test)*4 <= 100:
-                #     logger.info("No of selected STMFR samples for next round is less than 100")
-                #     break
-            else:
-                logger.info("STOPPING: No of samples added in the current round, %d, is less than %.2f fraction of the original.",curr_round_added_samples_count, stop_at)
+            except Exception as e:
+                #Handle the exception
+                logger.warning("An exception occurred: ")
+                logger.warning(e) 
                 break
-        except Exception as e:
-            #Handle the exception
-            logger.warning("An exception occurred: ")
-            logger.warning(e) 
-            break
-        
-logger.info("Reverse experiment ended in %d rounds!!!\n", round-1)    
-stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like='Cleveland', axis=0)
-logger.info("Reverse Pass: Total number of samples for which labelling is done: %s", stmfr_curr_round_labelled.shape)
-
-# %%
-print("Length of combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr: ",
-                    len(combined_train_stmfr_tcga), len(selected_stmfr_test), len(ood_stmfr))
+            
+    logger.info("Reverse experiment ended in %d rounds!!!\n", round-1)    
+    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like=reverse_match_for, axis=0)
+    logger.info("Reverse Pass: Total number of samples in %s for which labelling is done: %s", reverse_match_for, stmfr_curr_round_labelled.shape)
 
 # %% [markdown]
 # 
@@ -1819,71 +2016,45 @@ print("Length of combined_train_stmfr_tcga, selected_stmfr_test, ood_stmfr: ",
 #                          Difference of 333: These samples are in stemformatics dataset 
 
 # %%
-combined_train_stmfr_tcga
+if do_reverse_pass:
+    # For STMFR
+    if dataset == "GE":
+        stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!'+reverse_match_for+').)*$', axis=0)
 
-# %%
-# combined_train_stmfr_tcga.filter(regex='^((?!TCGA).)*$', axis=0)
+    # For cleveland
+    elif dataset == "HD" or dataset == "AI":
+        stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like=reverse_match_for, axis=0)
 
-stmfr_curr_round_labelled.shape
+    # stmfr_curr_round_combined = pd.concat([stmfr_curr_round_labelled, selected_stmfr_test])        
+    print(stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
 
-# %%
-# For STMFR
-if dataset == "GE":
-    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!TCGA).)*$', axis=0)
-
-# For cleveland
-elif dataset == "HD":
-    stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(like='Cleveland', axis=0)
-
-# stmfr_curr_round_combined = pd.concat([stmfr_curr_round_labelled, selected_stmfr_test])        
-print(stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].count())
-
-# %%
-# stmfr_curr_round_labelled[:,-2:]
-combined_train_stmfr_tcga.shape
-
-# %%
-# stmfr_curr_round_labelled.to_csv("labelled_smtfr_Dec_19.csv")
-
-# %%
-# type(stmfr_curr_round_labelled.shape)
-
-logger.info("Labelled Derived %s  %s", base_dataset, stmfr_curr_round_labelled.shape)
-# logger.info(stmfr_curr_round_labelled.shape)
-
+    logger.info("Labelled Derived %s  %s", base_dataset, stmfr_curr_round_labelled.shape)
 
 # %% [markdown]
 # # 1.8a Match the labels of derived base dataset with the real labels
 
 # %%
-stmfr_curr_round_labelled
+if do_reverse_pass:
+        reverse_match_labels = pd.merge(stmfr_curr_round_labelled, df, left_index=True, right_index=True)[['numeric_label_x','numeric_label_y']]
 
-# %%
-df
+        reverse_match_labels['match'] = np.where(reverse_match_labels['numeric_label_x'] == reverse_match_labels['numeric_label_y'], 1, 0)
+        count_match = reverse_match_labels.groupby(['match'])['match'].value_counts()[1].item()
+        perc_match = (count_match / len(reverse_match_labels)) 
+        # perc_match
 
-# %%
-reverse_match_labels = pd.merge(stmfr_curr_round_labelled, df, left_index=True, right_index=True)[['numeric_label_x','numeric_label_y']]
-reverse_match_labels
+        if debug:
+                print("\n\n******************\n\n")
+                print(count_match)
+                print(perc_match)
+                print("\n\n******************\n\n")
 
-# %%
-reverse_match_labels['match'] = np.where(reverse_match_labels['numeric_label_x'] == reverse_match_labels['numeric_label_y'], 1, 0)
-count_match = reverse_match_labels.groupby(['match'])['match'].value_counts()[1].item()
-perc_match = (count_match / len(reverse_match_labels)) 
-# perc_match
+        logger.info("\n\n1.8a: Reverse derived label %%age match with original labels for %s", base_dataset)
+        logger.info("For reverse experiment, %% match of labels between derived %s and original %s dataset: %f!!!\n", base_dataset, base_dataset, perc_match)    
 
-if debug:
-        print("\n\n******************\n\n")
-        print(count_match)
-        print(perc_match)
-        print("\n\n******************\n\n")
+        add_to_final_results = {"s_no": '1.8a', 'description': 'Reverse derived label match with original labels for '+base_dataset, 'value': perc_match}
+        # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
-logger.info("\n\n1.8a: Reverse derived label %%age match with original labels for %s", base_dataset)
-logger.info("For reverse experiment, %% match of labels between derived %s and original %s dataset: %f!!!\n", base_dataset, base_dataset, perc_match)    
-
-add_to_final_results = {"s_no": '1.8a', 'description': 'Reverse derived label match with original labels for '+base_dataset, 'value': perc_match}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
-
-final_results.loc[len(final_results)] = add_to_final_results
+        final_results.loc[len(final_results)] = add_to_final_results
 
 # %% [markdown]
 # # Derived STMFR train-test expr
@@ -1991,20 +2162,17 @@ def check_derived_stmfr(derived_stmfr_test_df):
     # logging.info(np.average(acc_list))
 
 # %%
-str((stmfr_curr_round_labelled.shape)[0])
+if do_reverse_pass:
+    stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].value_counts()
 
-# %%
-final_results
-
-# %%
-logger.info("1.8: Train-test on reverse derived %s dataset", base_dataset)
-avg_acc = check_derived_stmfr(stmfr_curr_round_labelled)
+    logger.info("1.8: Train-test on reverse derived %s dataset", base_dataset)
+    avg_acc = check_derived_stmfr(stmfr_curr_round_labelled)
 
 
-add_to_final_results = {"s_no": '1.8', 'description': 'Train-test on reverse derived '+base_dataset+" "+str((stmfr_curr_round_labelled.shape)[0]), 'value': avg_acc}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+    add_to_final_results = {"s_no": '1.8', 'description': 'Train-test on reverse derived '+base_dataset+" "+str((stmfr_curr_round_labelled.shape)[0]), 'value': avg_acc}
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
-final_results.loc[len(final_results)] = add_to_final_results
+    final_results.loc[len(final_results)] = add_to_final_results
 
 # %% [markdown]
 # # Get classification  probabilities for the samples for which labels did not match between base dataset and derived dataset
@@ -2139,25 +2307,25 @@ def get_probs(df):
 # # After Reverse pass: Labels which did not match for base dataset and its derived labels
 
 # %%
-a = pd.DataFrame(stmfr_curr_round_labelled['numeric_label'])
-b = pd.DataFrame(df['numeric_label'])
+if do_reverse_pass:
 
-c = pd.merge(a, b, left_index=True, right_index=True)
-c.columns = ['derived', 'original']
-# print (c)
+    a = pd.DataFrame(stmfr_curr_round_labelled['numeric_label'])
+    b = pd.DataFrame(df['numeric_label'])
+
+    c = pd.merge(a, b, left_index=True, right_index=True)
+    c.columns = ['derived', 'original']
+    # print (c)
+
+    not_matched_stmfr = c[c['derived'] != c['original']]
+
+    # print("For %d samples in derived dataset (out of total: %d), predicted labels did not match with that of original dataset: %.3f%%" % (len(not_matched_stmfr), len(stmfr_curr_round_labelled), (len(not_matched_stmfr)/len(stmfr_curr_round_labelled)*100)))
+
+    logger.info("For %d samples in derived dataset (out of total: %d), predicted labels did not match with that of original dataset: %.3f%%" % (len(not_matched_stmfr), len(stmfr_curr_round_labelled), (len(not_matched_stmfr)/len(stmfr_curr_round_labelled) *100)))
+    # 
 
 # %%
 # fname = model_name+"_compare_CL_labels.csv"
 # c.to_csv(fname)
-
-# %%
-not_matched_stmfr = c[c['derived'] != c['original']]
-
-# %%
-# print("For %d samples in derived dataset (out of total: %d), predicted labels did not match with that of original dataset: %.3f%%" % (len(not_matched_stmfr), len(stmfr_curr_round_labelled), (len(not_matched_stmfr)/len(stmfr_curr_round_labelled)*100)))
-
-logger.info("For %d samples in derived dataset (out of total: %d), predicted labels did not match with that of original dataset: %.3f%%" % (len(not_matched_stmfr), len(stmfr_curr_round_labelled), (len(not_matched_stmfr)/len(stmfr_curr_round_labelled) *100)))
-# 
 
 # %%
 # fname = model_name+"_probs_mismatch_CL.csv"
@@ -2178,9 +2346,6 @@ logger.info("For %d samples in derived dataset (out of total: %d), predicted lab
 # 
 
 # %%
-combined_train_stmfr_tcga
-
-# %%
 combined_stmfr_tcga_labeled_df = combined_train_stmfr_tcga
 
 # %% [markdown]
@@ -2191,52 +2356,14 @@ combined_stmfr_tcga_labeled_df = combined_train_stmfr_tcga
 # tcga_labeled_df.set_index(tcga_labeled_df['Unnamed: 0'], inplace=True)
 # tcga_labeled_df.drop('Unnamed: 0', axis=1, inplace=True)
 
-
 # %%
 # combined_stmfr_tcga_labeled_df.set_index(combined_stmfr_tcga_labeled_df['Unnamed: 0'], inplace=True)
 # combined_stmfr_tcga_labeled_df.drop('Unnamed: 0', axis=1, inplace=True)
-
-# %%
-combined_stmfr_tcga_labeled_df
-
-# %%
-combined_stmfr_tcga_labeled_df.columns
-
-# %%
-tcga
-
-# %%
-tcga_labeled_df
 
 # %% [markdown]
 # Train-test on various combination on STMFR and TCGA 
 
 # %%
-# combined_stmfr_tcga_labeled_df
-df.shape, tcga_labeled_df.shape
-
-# %%
-
-# Train on STMFR and test on TCGA
-
-
-
-# Train-test on combined STMFR+TCGA
-
-
-# Train on combined STMFR (50%)+TCGA and test on 50% STMFR
-
-
-# Train on combined STMFR+TCGA(50%) and test on 50% TCGA
-
-
-
-# X_train = train_df.iloc[:, :-1]
-# y_train = train_df['numeric_label']
-
-# X_test = tcga_test_df.iloc[:, :-1]
-# y_test = tcga_test_df['numeric_label']
-
 def check_model_comb_base_derived(base_df, derived_df):
 
     X_train = base_df.iloc[:, :-1]
@@ -2281,7 +2408,7 @@ def check_model_comb_base_derived(base_df, derived_df):
 
 
 # %% [markdown]
-# # 1.1b Train on original base dataset and test on original derived dataset 
+# # 1.1b Train on original base dataset and test on original to-be-labelled dataset 
 # 
 # (if labels are availalbe for derived dataset)
 
@@ -2289,96 +2416,106 @@ def check_model_comb_base_derived(base_df, derived_df):
 # df
 # orig_tcga
 # 1.1b: Train on original base dataset and test on original derived dataset, if labels are available
-if dataset == "HD":
-    logging.info("1.1b: Train on original %s (%s), test on original %s (%s)", base_dataset, df.shape, derived_dataset, orig_tcga.shape)
-    acc = check_model_comb_base_derived(df, orig_tcga)
 
-    add_to_final_results = {"s_no": '1.1b', 'description': 'Train on original '+base_dataset+' '+"test on original "+derived_dataset, 'value': acc}
-    
-elif dataset == "GE":
-    add_to_final_results = {"s_no": '1.1b', 'description': 'Train on original '+base_dataset+' '+"test on original "+derived_dataset, 'value': np.nan}
+if get_base_results:
 
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+        
+    if dataset == "HD" or dataset == "AI":
+        logging.info("1.1b: Train on original %s (%s), test on original %s (%s)", base_dataset, df.shape, derived_dataset, orig_tcga.shape)
+        acc = check_model_comb_base_derived(df, orig_tcga)
 
-final_results.loc[len(final_results)] = add_to_final_results
+        add_to_final_results = {"s_no": '1.1b', 'description': 'Train on original '+base_dataset+' '+"test on original "+derived_dataset, 'value': acc}
+        
+    elif dataset == "GE":
+        add_to_final_results = {"s_no": '1.1b', 'description': 'Train on original '+base_dataset+' '+"test on original "+derived_dataset, 'value': np.nan}
 
-# %%
-tcga_labelled_forward_expr.shape[0]
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
-# %%
-# 'Train on original '+base_dataset+' '+str(df.shape[0])+" test on derived "+derived_dataset+' '+str(tcga_labelled_forward_expr.shape[0])
+    final_results.loc[len(final_results)] = add_to_final_results
 
 # %%
-# tcga_labeled_df
 # 1.3: Train on complete base dataset, and test on derived labelled dataset 
 
-logging.info("\n\n1.3: Train on original %s (%s), test on derived %s (%s)", base_dataset, df.shape, derived_dataset, tcga_labeled_df.shape)
-acc = check_model_comb_base_derived(df, tcga_labeled_df)
+if get_extended_results:
+    
+
+    logging.info("\n\n1.3: Train on original %s (%s), test on derived %s (%s)", base_dataset, df.shape, derived_dataset, tcga_labelled_forward_expr.shape)
+    acc = check_model_comb_base_derived(df, tcga_labelled_forward_expr)
 
 
-add_to_final_results = {"s_no": '1.3', 'description': 'Train on original '+base_dataset+" test on derived "+derived_dataset, 'value': acc}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+    add_to_final_results = {"s_no": '1.3', 'description': 'Train on original '+base_dataset+" test on derived "+derived_dataset, 'value': acc}
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
-final_results.loc[len(final_results)] = add_to_final_results
+    final_results.loc[len(final_results)] = add_to_final_results
 
 # %%
 # 1.4:  Train on derived labelled dataset and test on original base dataset 
-logging.info("\n\n1.4: Train on derived %s (%s), test on %s (%s)", derived_dataset, tcga_labeled_df.shape, base_dataset, df.shape)
-acc = check_model_comb_base_derived(tcga_labeled_df, df)
 
-add_to_final_results = {"s_no": '1.4', 'description': 'Train on derived '+derived_dataset+" test on "+base_dataset, 'value': acc}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+if get_extended_results:
+    
+    logging.info("\n\n1.4: Train on derived %s (%s), test on %s (%s)", derived_dataset, tcga_labelled_forward_expr.shape, base_dataset, df.shape)
+    acc = check_model_comb_base_derived(tcga_labelled_forward_expr, df)
 
-final_results.loc[len(final_results)] = add_to_final_results
+    add_to_final_results = {"s_no": '1.4', 'description': 'Train on derived '+derived_dataset+" test on "+base_dataset, 'value': acc}
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
+
+    final_results.loc[len(final_results)] = add_to_final_results
 
 # %%
 # 1.5 Train-test on combined base_derived
 
-logger.info("1.5: Train and test on combined %s and %s", base_dataset, derived_dataset)
-train, test = train_test_split(pd.concat([df, tcga_labeled_df]), test_size=0.2, random_state=42, shuffle=True) 
-# X_train, y_train = train.iloc[:, :-1], train['numeric_label']
-# X_test, y_test = test.iloc[:, :-1], test['numeric_label']
-avg_acc = check_model_stmfr(pd.concat([df, tcga_labeled_df]), base_dataset+"+"+derived_dataset)
+if get_extended_results:
 
 
-add_to_final_results = {"s_no": '1.5', 'description': 'Train and test on combined '+base_dataset+' '+derived_dataset, 'value': avg_acc}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+    logger.info("1.5: Train and test on combined %s and %s", base_dataset, derived_dataset)
+    train, test = train_test_split(pd.concat([df, tcga_labelled_forward_expr]), test_size=0.2, random_state=42, shuffle=True) 
+    # X_train, y_train = train.iloc[:, :-1], train['numeric_label']
+    # X_test, y_test = test.iloc[:, :-1], test['numeric_label']
+    avg_acc = check_model_stmfr(pd.concat([df, tcga_labelled_forward_expr]), base_dataset+"+"+derived_dataset)
 
-final_results.loc[len(final_results)] = add_to_final_results
+
+    add_to_final_results = {"s_no": '1.5', 'description': 'Train and test on combined '+base_dataset+' '+derived_dataset, 'value': avg_acc}
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
+
+    final_results.loc[len(final_results)] = add_to_final_results
 
 # %%
 # 1.6 Train-test on combined base (50%) + derived, Test on base (remaining 50%)
 
-logger.info("\n1.6: Train on combined %s (50%%) + %s and test on 50%% %s:\n", base_dataset, derived_dataset, base_dataset)
+if get_extended_results:
 
-stmfr_train_df, stmfr_test_df = train_test_split(df, test_size=0.5, random_state=42, shuffle=True)
+    logger.info("\n1.6: Train on combined %s (50%%) + %s and test on 50%% %s:\n", base_dataset, derived_dataset, base_dataset)
 
-train_df = pd.concat([tcga_labeled_df, stmfr_train_df], ignore_index=True)
+    stmfr_train_df, stmfr_test_df = train_test_split(df, test_size=0.5, random_state=42, shuffle=True)
 
-acc = check_model_comb_base_derived(train_df, stmfr_test_df)
+    train_df = pd.concat([tcga_labelled_forward_expr, stmfr_train_df], ignore_index=True)
+
+    acc = check_model_comb_base_derived(train_df, stmfr_test_df)
 
 
-add_to_final_results = {"s_no": '1.6', 'description': 'Train on combined '+base_dataset+"(50%) "+derived_dataset+" and test on 50% "+base_dataset, 'value': acc}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+    add_to_final_results = {"s_no": '1.6', 'description': 'Train on combined '+base_dataset+"(50%) "+derived_dataset+" and test on 50% "+base_dataset, 'value': acc}
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
 
-final_results.loc[len(final_results)] = add_to_final_results
+    final_results.loc[len(final_results)] = add_to_final_results
 
 
 # %%
 # 1.7 Train-test on combined base + derived (50%), Test on derived (remaining 50%)
 
-logger.info("\n1.7: Train on combined %s + %s (50%%) and test on 50%% %s:\n", base_dataset, derived_dataset, derived_dataset)
+if get_extended_results:
 
-tcga_train_df, tcga_test_df = train_test_split(tcga_labeled_df, test_size=0.5, random_state=42, shuffle=True)
+    logger.info("\n1.7: Train on combined %s + %s (50%%) and test on 50%% %s:\n", base_dataset, derived_dataset, derived_dataset)
 
-train_df = pd.concat([df, tcga_train_df], ignore_index=True)
+    tcga_train_df, tcga_test_df = train_test_split(tcga_labelled_forward_expr, test_size=0.5, random_state=42, shuffle=True)
 
-acc = check_model_comb_base_derived(train_df, tcga_test_df)
+    train_df = pd.concat([df, tcga_train_df], ignore_index=True)
 
-add_to_final_results = {"s_no": '1.7', 'description': 'Train on combined '+base_dataset+" "+derived_dataset+"(50%) and test on 50% "+derived_dataset, 'value': acc}
-# final_results = final_results.append(add_to_final_results, ignore_index=True)
+    acc = check_model_comb_base_derived(train_df, tcga_test_df)
 
-final_results.loc[len(final_results)] = add_to_final_results
+    add_to_final_results = {"s_no": '1.7', 'description': 'Train on combined '+base_dataset+" "+derived_dataset+"(50%) and test on 50% "+derived_dataset, 'value': acc}
+    # final_results = final_results.append(add_to_final_results, ignore_index=True)
+
+    final_results.loc[len(final_results)] = add_to_final_results
 
 # %% [markdown]
 # # Save the final results dataframe
@@ -2386,9 +2523,8 @@ final_results.loc[len(final_results)] = add_to_final_results
 # %%
 final_results.description
 
-
 # %%
-final_results.sort_values(by=['s_no'])
+final_results
 
 # %%
 # tracker.stop()
@@ -2411,9 +2547,9 @@ final_results.sort_values(by=['s_no']).to_csv(final_results_save_path+"/"+fname_
 logger.info("Time to execute the code for the current settings: %.3f", total_time_code_exec)
 
 # %%
-print("\n\n**************\n\n")
+print("\n\n**************")
 print("Find details in the log file: ",log_file)
-print("\n\n**************\n\n")
+print("**************\n\n")
 
 # %% [markdown]
 # # End of code
