@@ -16,3 +16,5 @@ model_agreement.ipynb
 test.py
 EDA.ipynb
 cluster_data.ipynb
+Feature_Selection_Gene_Expression.ipynb
+check_datasets.ipynb
