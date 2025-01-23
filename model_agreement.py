@@ -71,6 +71,9 @@ import logging
 
 
 # %% [markdown]
+# 
+
+# %% [markdown]
 # # set the parameters for notebook or Read arguments from the command line in .py file 
 
 # %%
@@ -78,30 +81,30 @@ import logging
 # dataset = "Gene-Expr"
 # dataset = "AutoImmune"
 
-debug = 0
+debug = 1
 
 get_base_results = 1
 
-do_reverse_pass = 0
+do_reverse_pass = 1
 
 get_extended_results = 0
 
-dataset ="HD"
+# dataset ="HD"
 
-# dataset = "AI"
-# dataset_combo = "A_B"
+dataset = "AI"
+dataset_combo = "A_B"
 
 # For dataset = "Heart-Disease"
-dataset_combo = "SW_CL"  # Other combinations are CL_HG, CL_SW, CL_VA, HG_SW, HG_VA and so on
+# dataset_combo = "CL_HG"  # Other combinations are CL_HG, CL_SW, CL_VA, HG_SW, HG_VA and so on
 
-model_name = "SVM"
+model_name = "LR"
 random_state = 42
-n_models = 100
+n_models = 11
 frac_agree = 0.5
 
 test_split_size = 0.2
 
-opt_model= 0
+opt_model= 1
 
 save_fig_path = "./Plots/"+dataset+"/"+dataset_combo+"/"+model_name+"/"  
 
@@ -221,6 +224,7 @@ elif dataset == "HD":
             base_dataset = "Long Beach VA"
             base_file_path = './UCI_longbeach_va.csv'
         case _:
+            print("Valid name of base dataset is not provided")
             raise SystemExit("Valid name of base dataset is not provided")
     
 
@@ -244,6 +248,7 @@ elif dataset == "HD":
 
 
         case _:
+            print("Valid name of base dataset is not provided")
             raise SystemExit("Valid name of derived dataset is not provided")
             
 
@@ -275,6 +280,7 @@ elif dataset == "AI":
             to_be_labelled_file_path = './imm_set_B.csv'
 
 else:
+    print("Valid name of base dataset is not provided")
     raise SystemExit("Valid name of dataset not provided")
 
 
@@ -362,6 +368,9 @@ df = orig_df.copy()
 orig_tcga = pd.read_csv(to_be_labelled_file_path)
 
 tcga = orig_tcga.copy()
+
+# %%
+df.shape, tcga.shape
 
 # %%
 df.columns, tcga.columns 
@@ -702,15 +711,15 @@ def get_model(model_name):
           "XGB": XGBClassifier(objective='binary:logistic', random_state=random_state)
           }
   
-  elif dataset == "HD" and opt_model:  
+  elif (dataset == "HD" or dataset == "AI") and opt_model:  
       # Use optimised models if opt_model = 1
       model_dict = {
           
           # 'Logistic Regression':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
           # 'LR':LogisticRegression(n_jobs=-1, max_iter=250, random_state=random_state),
 
-          'Logistic Regression':LogisticRegression(max_iter=50, n_jobs=-1, random_state=42, solver='liblinear'),
-          'LR': LogisticRegression(max_iter=50, n_jobs=-1, random_state=42, solver='liblinear'),
+          'Logistic Regression':LogisticRegression(max_iter=50, random_state=42, solver='liblinear'),
+          'LR': LogisticRegression(max_iter=50, random_state=42, solver='liblinear'),
 
           'SVM':LinearSVC(dual=False, random_state=random_state),
 
@@ -731,14 +740,21 @@ def get_model(model_name):
 
   model_name = model_name.strip()
 
-  if model_name not in model_dict:
-    print("Model name should be one of", list(model_dict.keys()))
-    print("Please check the entered model name for spelling errors.")
-    sys.exit()
+  try:
+    if model_name not in model_dict:
+      print("Model name should be one of", list(model_dict.keys()))
+      print("Please check the entered model name for spelling errors.")
+      sys.exit()
 
-  else:
-    model = model_dict[model_name]
-    return model
+    else:
+      model = model_dict[model_name]
+
+  except:
+      print("Please check the entered model name for spelling errors.")
+      sys.exit()
+  
+  
+  return model
 
 # %%
 model_name
@@ -1880,6 +1896,7 @@ if do_reverse_pass:
     logger.info("\n\nSetting up Reverse pass:\n")
     logger.info("Labelled %s: shape %s", derived_dataset, tcga_labeled_df.shape)
 
+    forward_pass_sample_label_count = tcga_labeled_df.shape[0]
     # Set filter for the derived dataframe
     match dataset:
         case 'HD':
@@ -1907,7 +1924,7 @@ if do_reverse_pass:
 # print(re.match(regex, test))
 
 # %%
-if do_reverse_pass:
+if do_reverse_pass and forward_pass_sample_label_count>0:
 
     logger.info("\n Reverse experiment: \n\n")
     logger.info("Using derived %s to label %s", derived_dataset, base_dataset)
@@ -1936,7 +1953,7 @@ if do_reverse_pass:
     logger.info("\n Round 1 ends. Added %d samples for %s", curr_round_added_samples_count, reverse_match_for)
 
 # %%
-if do_reverse_pass:
+if do_reverse_pass and forward_pass_sample_label_count>0:
     round = 2
 
     if dataset == "HD":
@@ -2016,7 +2033,7 @@ if do_reverse_pass:
 #                          Difference of 333: These samples are in stemformatics dataset 
 
 # %%
-if do_reverse_pass:
+if do_reverse_pass and forward_pass_sample_label_count>0:
     # For STMFR
     if dataset == "GE":
         stmfr_curr_round_labelled = combined_train_stmfr_tcga.filter(regex='^((?!'+reverse_match_for+').)*$', axis=0)
@@ -2034,7 +2051,7 @@ if do_reverse_pass:
 # # 1.8a Match the labels of derived base dataset with the real labels
 
 # %%
-if do_reverse_pass:
+if do_reverse_pass and forward_pass_sample_label_count>0:
         reverse_match_labels = pd.merge(stmfr_curr_round_labelled, df, left_index=True, right_index=True)[['numeric_label_x','numeric_label_y']]
 
         reverse_match_labels['match'] = np.where(reverse_match_labels['numeric_label_x'] == reverse_match_labels['numeric_label_y'], 1, 0)
@@ -2162,7 +2179,7 @@ def check_derived_stmfr(derived_stmfr_test_df):
     # logging.info(np.average(acc_list))
 
 # %%
-if do_reverse_pass:
+if do_reverse_pass and forward_pass_sample_label_count>0:
     stmfr_curr_round_labelled.groupby(['numeric_label'])['numeric_label'].value_counts()
 
     logger.info("1.8: Train-test on reverse derived %s dataset", base_dataset)
@@ -2307,7 +2324,7 @@ def get_probs(df):
 # # After Reverse pass: Labels which did not match for base dataset and its derived labels
 
 # %%
-if do_reverse_pass:
+if do_reverse_pass and forward_pass_sample_label_count>0:
 
     a = pd.DataFrame(stmfr_curr_round_labelled['numeric_label'])
     b = pd.DataFrame(df['numeric_label'])
@@ -2422,7 +2439,7 @@ if get_base_results:
         
     if dataset == "HD" or dataset == "AI":
         logging.info("1.1b: Train on original %s (%s), test on original %s (%s)", base_dataset, df.shape, derived_dataset, orig_tcga.shape)
-        acc = check_model_comb_base_derived(df, orig_tcga)
+        acc = check_model_comb_base_derived(df, orig_tcga[df.columns])
 
         add_to_final_results = {"s_no": '1.1b', 'description': 'Train on original '+base_dataset+' '+"test on original "+derived_dataset, 'value': acc}
         
