@@ -81,7 +81,7 @@ import logging
 # dataset = "Gene-Expr"
 # dataset = "AutoImmune"
 
-debug = 1
+debug = 0
 
 get_base_results = 1
 

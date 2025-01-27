@@ -15,23 +15,25 @@ echo "So for each dataset, there are 6 x 6 x 6 = 216 combinations of the run."
 echo "\n\n\n\t\t\t***MLP might take a lot of time, advised to run separately.***\n\n\n"
 
 
-dataset_name=("AI")
+dataset_name=("HD")
 # dataset_name = ("HD" "GE" "AI")
 
-dataset_combo=("A_B")
+dataset_combo=("CL_HG")
 
 # dataset_combo=("SW_HG" "SW_VA" "VA_HG" "VA_SW")
 
-# model_name=("SVM" "DT" "RF" "XGB" "MLP")
+# model_name=("LR" "SVM" "DT" "RF" "XGB" "MLP")
 
-model_name=("LR")
+model_name=("SVM" "RF" "XGB" "MLP")
 
-n_models=(5)
+# model_name=("DT")
+
+# n_models=(3)
 # n_models=(50 60 70 80 90 100)
-# n_models=(5 11 21 31 41) 
+n_models=(5 11 21 31 41) 
 
-agreement_rates=(.7)
-# agreement_rates=(0.5 0.6 0.7 0.8 0.9 1.0)
+# agreement_rates=(.7)
+agreement_rates=(0.5 0.6 0.7 0.8 0.9 1.0)
 
 to_optimise_model=1
 
